@@ -437,3 +437,50 @@ html.theme-vt .topbar,html.theme-vt main{view-transition-name:none}
   ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
 }
 @media print{.masthead,.topbar,.nav,.btn,.colophon,.hero .fig{display:none}body{background:#fff;color:#000}}
+
+/* ================================================================ pausa */
+.topbtn{align-self:center;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--line2);border-radius:var(--r);background:transparent;color:var(--mute);font:500 .86rem var(--sans);transition:color var(--t1),border-color var(--t1),background var(--t1)}
+.topbtn:hover,.topbtn.on{color:var(--ink);border-color:var(--ink)}
+.topbtn svg{width:18px;height:18px}
+.topbtn + .topbtn,.topbtn + .iconbtn{margin-left:-18px}
+dialog.pausa{width:min(520px,calc(100vw - 32px));max-height:calc(100dvh - 32px);border:1px solid var(--line2);border-radius:var(--r);padding:clamp(22px,4vw,36px);background:var(--bg);color:var(--ink2)}
+dialog.pausa[open]{animation:rise .35s var(--ease)}
+dialog.pausa::backdrop{background:rgba(16,42,67,.55)}
+dialog.pausa h2{font-size:clamp(1.6rem,4vw,2.1rem);margin:12px 0 6px}
+dialog.pausa .dur{border:0;padding:0;margin:22px 0;display:flex;border:1px solid var(--line2)}
+dialog.pausa .dur legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+dialog.pausa .dur label{flex:1;position:relative;cursor:pointer}
+dialog.pausa .dur label+label{border-left:1px solid var(--line2)}
+dialog.pausa .dur input{position:absolute;opacity:0;inset:0;cursor:pointer}
+dialog.pausa .dur span{display:grid;place-items:center;min-height:46px;font:500 .92rem var(--sans);color:var(--mute);transition:background var(--t1),color var(--t1)}
+dialog.pausa .dur input:checked+span{background:var(--ink);color:var(--bg)}
+dialog.pausa .dur input:focus-visible+span{outline:2px solid var(--inst);outline-offset:-4px}
+dialog.pausa .apps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+dialog.pausa .foot{margin-top:16px;padding-top:14px;border-top:1px solid var(--line2)}
+.breakbar{position:fixed;left:0;right:0;bottom:0;z-index:45;background:var(--bg);border-top:1px solid var(--rule);transform:translateY(100%);transition:transform var(--t3) var(--ease)}
+.breakbar.in{transform:none}
+.breakbar>.in{max-width:var(--wrap);margin:0 auto;padding:12px var(--gut);display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:.94rem}
+.breakbar .dot{width:8px;height:8px;background:var(--inst);flex:none}
+.breakbar .dot.done{background:var(--good)}
+@media (max-width:860px){
+  .topbtn span{display:none} .topbtn{width:38px;justify-content:center;padding:0}
+  .topbar .in>.topbtn:first-of-type{margin-left:auto}
+  .topbtn + .topbtn,.topbtn + .iconbtn{margin-left:-14px}
+  .breakbar{bottom:calc(54px + env(safe-area-inset-bottom))}
+  dialog.pausa .apps{grid-template-columns:1fr}
+}
+
+/* ================================================================ música */
+.musica{position:fixed;z-index:50;top:calc(68px + 30px + 10px);right:max(var(--gut),calc((100vw - var(--wrap))/2 + var(--gut)));width:min(400px,calc(100vw - 32px));background:var(--bg);border:1px solid var(--rule);padding:20px 20px 16px;visibility:hidden;opacity:0;transform:translateY(-6px);transition:opacity var(--t2) var(--ease),transform var(--t2) var(--ease),visibility 0s linear var(--t2)}
+.musica.open{visibility:visible;opacity:1;transform:none;transition:opacity var(--t2) var(--ease),transform var(--t2) var(--ease),visibility 0s}
+.musica header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}
+.musica h2{font-size:1.4rem;margin:8px 0 0}
+.musica .iconbtn{flex:none}
+.musica .player{min-height:352px;background:var(--panel2)}
+.musica iframe{display:block;border:0;border-radius:12px}
+.musica footer{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-top:12px}
+.musica footer .link{white-space:nowrap;flex:none}
+@media (max-width:860px){
+  .musica{top:auto;right:8px;left:8px;width:auto;bottom:calc(54px + env(safe-area-inset-bottom) + 8px);transform:translateY(8px)}
+  .musica .player{min-height:152px} .musica iframe{height:152px}
+}

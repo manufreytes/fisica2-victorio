@@ -26,5 +26,19 @@
   onScroll();
 
   Router.render();
+
+  /* Aviso de visita al dueño del sitio (ntfy.sh): una vez por sesión, sin datos personales.
+     Para no notificar tus propias visitas, abrí una vez la web con ?yo (p. ej. .../fisica2-victorio/?yo). */
+  try {
+    const TOPIC = 'f2d-68757fe9e0d7';
+    if (new URLSearchParams(location.search).has('yo')) localStorage.setItem('f2d.owner', '1');
+    const skip = localStorage.getItem('f2d.owner') || sessionStorage.getItem('f2d.pinged') || !location.protocol.startsWith('http') || /^(localhost|127\.)/.test(location.hostname);
+    if (!skip) {
+      sessionStorage.setItem('f2d.pinged', '1');
+      const dev = matchMedia('(max-width:860px)').matches ? 'celular' : 'compu';
+      fetch(`https://ntfy.sh/${TOPIC}?title=${encodeURIComponent('Visita a Física II')}&tags=books`, { method: 'POST', body: `Alguien entró desde ${dev}.`, keepalive: true }).catch(() => {});
+    }
+  } catch (e) {}
+
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();

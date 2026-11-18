@@ -311,7 +311,7 @@ route('/progreso', 'progreso', (p, app) => {
   <div class="sectionhead"><h2>Últimas defensas</h2></div>
   <div class="card">${S.sessions.length ? `<table class="t"><tr><th>Fecha</th><th>Bolillas</th><th>Resultado</th><th>Rúbrica (CG1/CG4/CG9)</th></tr>${S.sessions.slice(-8).reverse().map(s => `<tr><td class="mono small">${new Date(s.t).toLocaleDateString('es-AR')}</td><td>${s.units.map(x => U(x).rom).join(' · ')}</td><td><strong>${Math.round(s.pct * 100)}%</strong> ${s.pct >= .6 ? '<span class="chip t">aprobado</span>' : '<span class="chip">a reforzar</span>'}</td><td class="small mute">${s.rubric ? s.rubric.join(' / ') : '—'}</td></tr>`).join('')}</table>` : '<span class="mute">Todavía no hiciste ninguna defensa simulada.</span>'}</div>
   <div class="sectionhead"><h2>Tus datos</h2></div>
-  <div class="card"><p class="mute small">Todo se guarda en este navegador (nada se sube a ningún servidor). Exportá una copia para pasarla a otro dispositivo.</p>
+  <div class="card"><p class="mute small">Tu progreso se guarda en este navegador y nunca se sube a ningún servidor. Exportá una copia para pasarla a otro dispositivo.</p>
   <div class="row"><button class="btn sm" id="exp">Exportar progreso</button><label class="btn sm ghost" style="cursor:pointer">Importar<input type="file" id="imp" accept="application/json" hidden></label><button class="btn sm bad" id="rst">Borrar todo</button></div></div>`;
   $('#exam', app).addEventListener('change', e => { S.exam = e.target.value || null; Store.save(); Router.render(); });
   $('#exp', app).addEventListener('click', () => {
