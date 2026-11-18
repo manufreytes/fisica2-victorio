@@ -57,5 +57,5 @@ Las **superficies equipotenciales** son siempre perpendiculares a las líneas de
     ['El trabajo para mover una carga entre dos puntos de una equipotencial es nulo, cualquiera sea el camino.', true, 'Porque $\\Delta V=0$.'],
     ['Dentro de un conductor en equilibrio el potencial es cero.', false, 'Es constante (el campo es cero), pero no necesariamente cero.']
   ],
-  consejo: 'Cuando el tribunal pregunte “¿por qué E=−∇V?”, respondé desde el trabajo: dV = −E·dl.'
+  consejo: 'Cuando los profes pregunten “¿por qué E=−∇V?”, respondé desde el trabajo: dV = −E·dl.'
 });

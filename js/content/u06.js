@@ -57,5 +57,5 @@ La **ley de Ampère** $\oint\vec B\cdot d\vec l=\mu_0I_{enc}$ cumple, para el ma
     ['La ley de Ampère permite calcular el campo magnético de cualquier distribución de corriente.', false, 'Es válida siempre, pero sólo permite despejar $B$ cuando hay simetría suficiente.'],
     ['En el centro de una espira circular de radio R el campo es μ₀I/2R.', true, 'Todos los elementos contribuyen en la misma dirección.']
   ],
-  consejo: 'Dibujá el vector B y la regla de la mano derecha antes de calcular: el tribunal mira el dibujo.'
+  consejo: 'Dibujá el vector B y la regla de la mano derecha antes de calcular: los profes miran el dibujo.'
 });

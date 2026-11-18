@@ -55,5 +55,5 @@ El **ciclo de histéresis** ($B$ vs $H$) tiene remanencia $B_r$ y coercitividad 
     ['El área del ciclo de histéresis representa energía disipada por ciclo.', true, 'Por unidad de volumen: $\\oint H\\,dB$.'],
     ['La susceptibilidad de un ferromagnético es constante.', false, 'Depende de $H$ y de la historia (histéresis).']
   ],
-  consejo: 'La analogía (E,P,D) ↔ (B,M,H) es un puente que el tribunal valora: usala para conectar las Unidades III y IX.'
+  consejo: 'La analogía (E,P,D) ↔ (B,M,H) es un puente que los profes valoran: usala para conectar las Unidades III y IX.'
 });

@@ -114,7 +114,7 @@
       const { u, v } = cur;
       app.innerHTML = header('vf', uq) + `<div class="card vf fade"><div class="row small mono mute"><span class="chip" style="color:${unitColor(u)}">U. ${u.rom} · ${esc(u.short)}</span><span class="sp"></span><span>racha ${Store.s.vfStreak}</span></div>
       <p class="stmt">${v[0]}</p>
-      ${answered ? `<div class="callout ${answered === 'ok' ? 'good' : ''}"><b>${answered === 'ok' ? 'Bien' : 'Trampa'} · es ${v[1] ? 'VERDADERO' : 'FALSO'}</b><br>${v[2]}</div><p class="small mute">Ahora decí en voz alta cómo lo justificarías ante el tribunal.</p><div class="row"><button class="btn solid" id="nx">Otra afirmación</button></div>`
+      ${answered ? `<div class="callout ${answered === 'ok' ? 'good' : ''}"><b>${answered === 'ok' ? 'Bien' : 'Trampa'} · es ${v[1] ? 'VERDADERO' : 'FALSO'}</b><br>${v[2]}</div><p class="small mute">Ahora decí en voz alta cómo lo justificarías en el oral.</p><div class="row"><button class="btn solid" id="nx">Otra afirmación</button></div>`
         : `<div class="opts"><button class="btn" data-a="1">Verdadero</button><button class="btn bad" data-a="0">Falso</button></div>`}</div>`;
       bindFilter(app, 'vf'); math(app);
       $$('[data-a]', app).forEach(b => b.onclick = () => {

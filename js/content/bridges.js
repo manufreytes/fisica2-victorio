@@ -1,4 +1,4 @@
-/* Puentes entre unidades: lo que el tribunal pregunta con “relacioná X con Y” */
+/* Puentes entre unidades: lo que preguntan los profes con “relacioná X con Y” */
 F2.bridges.push(
   { a: 1, b: 2, t: 'Campo conservativo ⇒ potencial', k: [R`$\vec E$ electrostático es conservativo: $\oint\vec E\cdot d\vec l=0$`, R`$\vec E=-\nabla V$ y $\Delta V=-\int\vec E\cdot d\vec l$`, 'Dos rutas: Gauss (vectorial, con simetría) o potencial (escalar) + gradiente', 'Ambas deben dar el mismo campo'] },
   { a: 2, b: 3, t: 'Potencial → capacidad y energía', k: [R`$C=Q/\Delta V$ con $\Delta V=-\int\vec E\cdot d\vec l$ entre placas`, R`$U=\tfrac12CV^2$`, R`La energía es del campo: $u=\tfrac12\varepsilon_0E^2$`] },

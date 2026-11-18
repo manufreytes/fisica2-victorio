@@ -6,7 +6,7 @@
   const get = () => { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } };
   const set = v => { try { v ? localStorage.setItem(KEY, JSON.stringify(v)) : localStorage.removeItem(KEY); } catch (e) {} };
   const mmss = s => Math.floor(s / 60) + ':' + String(Math.max(0, s) % 60).padStart(2, '0');
-  const inDefense = () => !!$('#ans'); // hay una pregunta del tribunal en curso
+  const inDefense = () => !!$('#ans'); // hay una pregunta del oral en curso
 
   /* ---------- diálogo ---------- */
   const dlg = document.createElement('dialog');

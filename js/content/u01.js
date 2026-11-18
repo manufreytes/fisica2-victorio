@@ -5,7 +5,7 @@ F2.units.push({
   resumen: R`
 La **carga** es cuantizada y se conserva. La fuerza entre dos cargas puntuales (Coulomb) es central, inversamente proporcional a $r^2$ y obedece **superposición**. En vez de pensar “acción a distancia”, definimos el **campo** $\vec E=\vec F/q_0$: una propiedad del espacio creada por las cargas fuente.
 
-Para distribuciones continuas se integra $d\vec E$ (vectorial: usá la simetría para anular componentes). Así salen anillo, disco, hilo y plano, y los **límites** que el tribunal ama: disco con $z\ll R$ → plano infinito; con $z\gg R$ → carga puntual.
+Para distribuciones continuas se integra $d\vec E$ (vectorial: usá la simetría para anular componentes). Así salen anillo, disco, hilo y plano, y los **límites** que los profes aman: disco con $z\ll R$ → plano infinito; con $z\gg R$ → carga puntual.
 
 La **ley de Gauss** $\oint\vec E\cdot d\vec A=Q_{enc}/\varepsilon_0$ es equivalente a Coulomb, pero útil como *herramienta de cálculo* sólo cuando hay simetría (esférica, cilíndrica, plana) que permite sacar $E$ fuera de la integral. En forma diferencial, $\nabla\cdot\vec E=\rho/\varepsilon_0$: la primera ecuación de Maxwell.`,
   formulas: [
@@ -31,7 +31,7 @@ La **ley de Gauss** $\oint\vec E\cdot d\vec A=Q_{enc}/\varepsilon_0$ es equivale
       err: 'Usar $Q$ total para $r<R$.' },
     { t: 'cruz', q: 'Anillo → disco → plano infinito: ¿cómo se conectan los resultados y qué verificás con los límites?',
       k: ['Disco = suma de anillos concéntricos de radio $r$ y ancho $dr$', 'Integral da $E_z=\\frac{\\sigma}{2\\varepsilon_0}\\big(1-\\frac{z}{\\sqrt{z^2+R^2}}\\big)$', '$R\\to\\infty$: $\\sigma/2\\varepsilon_0$ (coincide con Gauss)', '$z\\gg R$: $kQ/z^2$ (carga puntual)', 'Chequear límites es verificar coherencia del resultado'],
-      err: 'Dar la fórmula sin comprobar casos límite: el tribunal lo pide.' },
+      err: 'Dar la fórmula sin comprobar casos límite: los profes lo piden.' },
     { t: 'ded', q: 'Forma diferencial de la ley de Gauss: ¿cómo se obtiene de la integral y qué significa?',
       k: ['Teorema de la divergencia: $\\oint\\vec E\\cdot d\\vec A=\\int\\nabla\\cdot\\vec E\\,dV$', '$Q_{enc}=\\int\\rho\\,dV$ para cualquier volumen ⇒ $\\nabla\\cdot\\vec E=\\rho/\\varepsilon_0$', 'Ley local: las cargas son fuentes (divergencia) del campo', 'Fuera de las cargas $\\nabla\\cdot\\vec E=0$ (ej. $1/r^2$)', 'Es la 1ª ecuación de Maxwell']
     }

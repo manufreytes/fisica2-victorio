@@ -1,4 +1,4 @@
-/* Bolillero + simulador de tribunal */
+/* Bolillero + simulacro de oral */
 (function () {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const FILLERS = /\b(e+h+|m{2,}|o sea|digamos|tipo|como que|viste)\b/gi;
@@ -36,7 +36,7 @@
   function bridgeUnit(i) { return F2.bridges[i].a; }
 
   function setup(app) {
-    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Simulacro de oral</div><h1>Bolillero</h1><p>Sacás una bolilla y el tribunal te hace cuatro preguntas: <strong>exposición libre</strong>, una de <strong>definición o deducción</strong>, una de <strong>aplicación o cruzada</strong> y una <strong>pregunta puente</strong> con otra unidad. Respondés en voz alta (o escribís), después ves lo que esperaban y te ponés la nota vos. Sin hacer trampa.</p></header><div style="height:36px"></div>
+    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Simulacro de oral</div><h1>Bolillero</h1><p>Sacás una bolilla y los profes te hacen cuatro preguntas: <strong>exposición libre</strong>, una de <strong>definición o deducción</strong>, una de <strong>aplicación o cruzada</strong> y una <strong>pregunta puente</strong> con otra unidad. Respondés en voz alta (o escribís), después ves lo que esperaban y te ponés la nota vos. Sin hacer trampa.</p></header><div style="height:36px"></div>
     <div class="grid g2" style="align-items:start">
       <div class="card"><div class="cage" id="cage"></div><div class="drawn" id="drawn"><span class="mute">Girá el bolillero y rezá</span></div>
         <div class="row" style="justify-content:center"><button class="btn solid" id="spin">Girar bolillero</button></div></div>
@@ -123,7 +123,7 @@
           <div class="sp"><textarea id="ans" placeholder="${S.opt.voice ? 'Tu respuesta (podés dictar con el micrófono o escribir notas)…' : 'Notas rápidas (opcional)…'}" aria-label="Tu respuesta"></textarea></div></div>
         <div class="row" style="margin-top:10px">${SR && S.opt.voice ? '<button class="btn sm" id="mic">● Dictar</button>' : ''}<button class="btn sm ghost" id="boardBtn">Pizarra</button><span class="sp"></span><span class="mono small mute" id="metrics"></span></div>
         <div id="boardWrap" hidden style="margin-top:10px"><canvas class="board" id="board"></canvas><div class="row" style="margin-top:6px"><button class="btn sm ghost" id="clr">Borrar pizarra</button><span class="small mute">Dibujá la gaussiana, el diagrama fasorial, la marcha de rayos…</span></div></div>
-        <hr><div class="row"><button class="btn solid" id="done">Terminé — ver lo que esperaba el tribunal</button></div>
+        <hr><div class="row"><button class="btn solid" id="done">Terminé — ver qué esperaban los profes</button></div>
         <div id="review"></div>
       </div>`;
     const ans = $('#ans', app), tt = $('#tt', app), ring = $('#ring', app), timer = $('#timer', app);
@@ -170,7 +170,7 @@
     $('#done', app).addEventListener('click', () => {
       clearInterval(tmr); stopRec(); $('#done', app).disabled = true; metrics();
       const rv = $('#review', app);
-      rv.innerHTML = `<div class="sectionhead" style="margin-top:22px"><h3 style="margin:0">Lo que el tribunal esperaba</h3></div>
+      rv.innerHTML = `<div class="sectionhead" style="margin-top:22px"><h3 style="margin:0">Lo que esperaban los profes</h3></div>
         <p class="small mute">${st.hint ? 'Tildá los temas que cubriste.' : 'Tildá lo que dijiste con claridad y sin mirar.'} Sin mentirte, que en el oral no te van a regalar nada.</p>
         ${st.k.map((k, i) => `<label class="check" style="text-transform:none;letter-spacing:0;font:inherit;color:inherit"><input type="checkbox" data-i="${i}"><span>${k}</span></label>`).join('')}
         ${st.err ? `<div class="callout"><b>Error típico</b><br>${st.err}</div>` : ''}
