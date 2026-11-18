@@ -497,3 +497,12 @@ dialog.pausa .foot{margin-top:16px;padding-top:14px;border-top:1px solid var(--l
   .musica{top:auto;right:8px;left:8px;width:auto;bottom:calc(54px + env(safe-area-inset-bottom) + 8px);transform:translateY(8px)}
   .musica .player{min-height:152px} .musica iframe{height:152px}
 }
+
+/* ================================================================ manu es genial */
+.manu{position:fixed;z-index:44;right:14px;top:50%;width:40px;height:40px;margin-top:-20px;border-radius:50%;display:grid;place-items:center;background:#25D366;color:#fff;box-shadow:0 4px 14px -4px rgba(0,0,0,.35);transition:transform var(--t2) var(--ease),box-shadow var(--t2)}
+.manu svg{width:21px;height:21px}
+.manu:hover{transform:scale(1.1);box-shadow:0 8px 22px -6px rgba(37,211,102,.7)}
+.manu:active{transform:scale(.95)}
+.manu:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+@media (max-width:860px){.manu{right:10px;width:38px;height:38px;margin-top:-19px}}
+@media print{.manu{display:none}}

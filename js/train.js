@@ -10,10 +10,10 @@
   function bindFilter(app, mode) { $('#uf', app).addEventListener('change', e => { location.hash = '#/entrenar/' + mode + (e.target.value ? '?u=' + e.target.value : ''); }); }
 
   route('/entrenar', 'entrenar', (p, app) => {
-    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Entrenamiento</div><h1>Tres formas de <em>fijar</em> lo que sabés</h1><p>Repaso espaciado para retener, deducciones para el pizarrón y afirmaciones engañosas para no caer en las trampas del tribunal.</p></header><div class="grid g3" style="margin-top:40px">
+    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Entrenamiento</div><h1>Tres formas de <em>fijar</em> lo que sabés</h1><p>Tarjetas para que no se te olvide, deducciones para el pizarrón y frases tramposas para que no te agarre el tribunal.</p></header><div class="grid g3" style="margin-top:40px">
       <a class="card ucard" href="#/entrenar/mazo" ><span class="rom">↻</span><h3>Mazo de repaso</h3><span class="mute small">Tarjetas con repaso espaciado: ${Store.dueCards().length} para hoy.</span></a>
       <a class="card ucard" href="#/entrenar/deduccion" ><span class="rom">∑</span><h3>Armá la deducción</h3><span class="mute small">Ordená los pasos de las demostraciones que te piden en el pizarrón.</span></a>
-      <a class="card ucard" href="#/entrenar/vf" ><span class="rom" style="font-size:1.5rem">V/F</span><h3>Verdadero / falso</h3><span class="mute small">Las afirmaciones “casi correctas” que usa el tribunal para pisar.</span></a></div>`;
+      <a class="card ucard" href="#/entrenar/vf" ><span class="rom" style="font-size:1.5rem">V/F</span><h3>Verdadero / falso</h3><span class="mute small">Las frases “casi correctas” con las que el tribunal te quiere hacer pisar el palito.</span></a></div>`;
   });
 
   /* ---------- mazo ---------- */
@@ -31,7 +31,7 @@
       if (idx >= queue.length) {
         const n = stats.reduce((a, b) => a + b, 0), nextDue = Object.values(Store.s.cards).map(c => c.due).filter(d => d > Date.now()).sort()[0];
         body = n ? `<div class="card" style="text-align:center"><div class="score">${n}</div><p>tarjetas repasadas · ${stats[2] + stats[3]} bien · ${stats[0] + stats[1]} para reforzar</p><div class="row" style="justify-content:center"><a class="btn solid" href="#/bolillero">Pasar a una defensa</a><button class="btn" id="more">Repasar 12 más al azar</button></div></div>`
-          : `<div class="card" style="text-align:center"><h3>No hay tarjetas pendientes</h3><p class="mute">${nextDue ? 'La próxima vence ' + new Date(nextDue).toLocaleString('es-AR', { dateStyle: 'medium', timeStyle: 'short' }) + '.' : ''}</p><button class="btn" id="more">Repasar 12 al azar igual</button></div>`;
+          : `<div class="card" style="text-align:center"><h3>No te quedan tarjetas por hoy</h3><p class="mute">${nextDue ? 'La próxima vence ' + new Date(nextDue).toLocaleString('es-AR', { dateStyle: 'medium', timeStyle: 'short' }) + '.' : ''}</p><button class="btn" id="more">Repasar 12 al azar igual</button></div>`;
       } else {
         const c = queue[idx];
         body = `<div class="row small mono mute" style="margin-bottom:8px"><span>${idx + 1} / ${queue.length}</span><span class="chip" style="color:${unitColor(c.unit)}">U. ${U(c.unit).rom} · ${esc(U(c.unit).short)}</span></div>
@@ -80,7 +80,7 @@
       app.innerHTML = header('deduccion', uq) + `<div class="card"><div class="row"><span class="chip" style="color:${unitColor(u)}">Unidad ${u.rom} · ${esc(u.short)}</span><span class="sp"></span><button class="btn sm ghost" id="other">Otra deducción</button></div>
       <h2 style="margin-top:12px">${d.titulo}</h2><p class="mute small">${d.intro} Tocá un paso para sumarlo a tu orden; tocá uno de tu orden para devolverlo.</p>
       <div class="grid g2" style="align-items:start"><div><div class="eyebrow" style="margin-bottom:8px">Tu orden</div>${mine.length ? mine.map((s, i) => `<div class="slotrow ${verified ? (correct[i] ? 'ok' : 'no2') : ''}" data-m="${i}"><span class="no">${i + 1}</span><span>${d.pasos[s]}</span></div>`).join('') : '<div class="mute small">Todavía no elegiste ningún paso.</div>'}</div>
-      <div><div class="eyebrow" style="margin-bottom:8px">Pasos desordenados (${rest.length})</div>${rest.map(s => `<div class="slotrow" data-p="${s}"><span class="no">·</span><span>${d.pasos[s]}</span></div>`).join('') || '<div class="mute small">No quedan pasos.</div>'}</div></div>
+      <div><div class="eyebrow" style="margin-bottom:8px">Pasos desordenados (${rest.length})</div>${rest.map(s => `<div class="slotrow" data-p="${s}"><span class="no">·</span><span>${d.pasos[s]}</span></div>`).join('') || '<div class="mute small">Ya usaste todos los pasos.</div>'}</div></div>
       <div class="row" style="margin-top:14px"><button class="btn solid" id="check" ${mine.length === d.pasos.length && !verified ? '' : 'disabled'}>Verificar</button><button class="btn ghost" id="sol">Ver solución</button><button class="btn ghost" id="retry">Reordenar</button></div>
       <div id="msg"></div></div>`;
       bindFilter(app, 'deduccion'); math(app);
@@ -94,7 +94,7 @@
         Store.bump(uid, ok ? 1 : (n / tot) * .6, .25); if (ok) Store.s.ded[uid] = (Store.s.ded[uid] || 0) + 1; Store.save();
         draw(); const first = correct.indexOf(false);
         $('#msg', app).innerHTML = ok ? `<div class="callout good" style="margin-top:14px"><b>¡Perfecto!</b><br>Ahora el desafío de verdad: reconstruila en voz alta sin mirar, justificando cada paso (¿por qué simetría?, ¿por qué esta superficie?).</div>`
-          : `<div class="callout" style="margin-top:14px"><b>${n} de ${tot} en su lugar</b><br>El primer error está en tu paso ${first + 1}. Pensá qué tiene que haber ocurrido antes de ese paso.</div>`;
+          : `<div class="callout" style="margin-top:14px"><b>${n} de ${tot} en su lugar</b><br>El primer error está en tu paso ${first + 1}. Pensá qué tiene que pasar antes de ese paso.</div>`;
       };
     };
     draw();

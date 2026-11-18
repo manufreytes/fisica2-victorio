@@ -39,12 +39,12 @@ function constellation() {
     <div class="side">
       <div class="eyebrow">Fig. 2 · Mapa del programa</div>
       <h2>La constelación de <em>Maxwell</em></h2>
-      <p>Las doce unidades y las ${F2.bridges.length} conexiones que el tribunal suele pedir: “relacioná X con Y”. El anillo de cada unidad indica tu dominio actual.</p>
+      <p>Las doce unidades y las ${F2.bridges.length} conexiones que te puede tirar el tribunal: “relacioná X con Y”. El anillo de cada unidad te muestra cuánto la tenés.</p>
       <ul class="legend">${Object.entries(BLOCK).map(([k, v]) => `<li><i style="background:${v}"></i>${k}</li>`).join('')}</ul>
-      <div class="bridgebox" id="bridgebox"><span class="mute">Seleccioná una conexión en el mapa para ver los puntos que se esperan.</span></div>
+      <div class="bridgebox" id="bridgebox"><span class="mute">Tocá una línea del mapa y te muestro qué esperan que digas.</span></div>
     </div>
     <figure class="fig main"><div class="constel${intro ? ' drawin' : ''}"><svg viewBox="0 0 1000 560" role="img" aria-label="Mapa de conexiones entre las doce unidades">${edges}${nodes}</svg></div>
-      <figcaption><b>Fig. 2</b>Pasá el cursor por una unidad para ver sus conexiones; hacé clic en una línea para abrir el puente.</figcaption></figure>
+      <figcaption><b>Fig. 2</b>Pasá el mouse por una unidad para ver con cuáles se conecta, y hacé clic en una línea para abrir el puente.</figcaption></figure>
   </div>`;
 }
 
@@ -201,17 +201,17 @@ route('/', 'home', (p, app) => {
     <div class="hero-copy">
       <div class="eyebrow">Electromagnetismo y óptica · Doce unidades</div>
       <h1>Defendé la materia <em>hablando</em>, no memorizando.</h1>
-      <p class="lead">La parte teórica del examen es oral. Esta plataforma la simula: sacás una bolilla, respondés en voz alta frente a un tribunal y contrastás tu respuesta con los puntos que espera la cátedra. Se aprueba con el 60 %.</p>
+      <p class="lead">La teoría se rinde oral, así que acá la practicás tal cual: sacás una bolilla, respondés en voz alta como si tuvieras al tribunal enfrente y después comparás con lo que espera la cátedra. Con el 60&nbsp;% aprobás.</p>
       <div class="row"><a class="btn solid" href="#/bolillero">Sacar una bolilla <span class="arr" aria-hidden="true">→</span></a><a class="btn ghost" href="#/unidades">Ver el programa</a></div>
     </div>
     <figure class="fig">
       <div class="field" id="field" role="img" aria-label="Simulación interactiva de las líneas de campo de un dipolo con cargas +2q y −q"><canvas></canvas></div>
-      <figcaption><b>Fig. 1</b>Líneas de campo de un dipolo asimétrico. La mitad del flujo que sale de +2q termina en −q; el resto escapa al infinito (ley de Gauss). Arrastrá las cargas para modificar la configuración.</figcaption>
+      <figcaption><b>Fig. 1</b>Líneas de campo de un dipolo asimétrico. La mitad del flujo que sale de +2q termina en −q; el resto escapa al infinito (ley de Gauss). Probá arrastrar las cargas y mirá cómo cambia.</figcaption>
     </figure>
   </section>
   <section class="today" aria-label="Hoy te toca">
     <div><div class="eyebrow">Tu punto más flojo</div><h3>Unidad ${weakest[0].rom}. ${esc(weakest[0].short)}</h3>
-      <p class="grow">${weakest[1] == null ? 'Todavía sin practicar. Es un buen lugar para empezar.' : 'Dominio estimado: ' + pctTxt(weakest[1]) + '.'}</p><a class="link" href="#/bolillero?u=${weakest[0].id}">Defender esta unidad <span class="arr" aria-hidden="true">→</span></a></div>
+      <p class="grow">${weakest[1] == null ? 'Todavía no la tocaste. Arrancá por acá.' : 'La tenés al ' + pctTxt(weakest[1]) + '. Dale una vuelta más.'}</p><a class="link" href="#/bolillero?u=${weakest[0].id}">Defender esta unidad <span class="arr" aria-hidden="true">→</span></a></div>
     <div><div class="eyebrow">Repaso espaciado</div><h3>${due} tarjeta${due == 1 ? '' : 's'} para hoy</h3>
       <p class="grow">Las que fallás vuelven antes; las que sabés, cada vez más espaciadas.</p><a class="link" href="#/entrenar/mazo">Empezar el repaso <span class="arr" aria-hidden="true">→</span></a></div>
     <div><div class="eyebrow">Afirmación del día · Unidad ${trap.u.rom}</div><p class="trap grow">${trap.v[0]}</p>
@@ -232,7 +232,7 @@ route('/', 'home', (p, app) => {
 route('/unidades', 'unidades', (p, app) => {
   const blocks = [...new Set(F2.units.map(u => u.block))];
   app.innerHTML = `<header class="pagehead"><div class="eyebrow">Programa 10-04067</div><h1>Las <em>doce</em> bolillas</h1>
-    <p>Cada unidad reúne el hilo conceptual, las fórmulas clave, las preguntas de tribunal con lo que se espera escuchar y los puentes hacia otras unidades.</p></header>` +
+    <p>En cada una tenés el hilo de la unidad, las fórmulas que no te pueden faltar, las preguntas que te puede hacer el tribunal (con lo que quieren escuchar) y cómo se conecta con las demás.</p></header>` +
     blocks.map(b => { const us = F2.units.filter(u => u.block === b); return `<section class="toc"><header><i style="background:${BLOCK[b]}"></i><h2>${b}</h2><span>${us.length} unidad${us.length > 1 ? 'es' : ''}</span></header><ol>` +
       us.map(u => `<li><a class="toc-row" href="#/unidad/${u.id}" style="--c:${unitColor(u)}"><span class="rom">${u.rom}</span><div><h3>${esc(u.title)}</h3><div class="tm">${u.temas.slice(0, 3).map(esc).join(' · ')}${u.temas.length > 3 ? '…' : ''}</div></div>
       <span class="ch">${esc(u.book)}</span><div class="meter" title="Dominio: ${pctTxt(Store.mastery(u.id))}"><i style="width:${Math.round((Store.mastery(u.id) || 0) * 100)}%"></i></div><span class="arr" aria-hidden="true">→</span></a></li>`).join('') + '</ol></section>'; }).join('');
@@ -265,7 +265,7 @@ route('/unidad/:id', 'unidades', ({ id }, app) => {
         <table class="formulas"><thead><tr><th scope="col">Magnitud o ley</th><th scope="col">Expresión</th><th scope="col">Observaciones</th></tr></thead>
         <tbody>${u.formulas.map(f => `<tr><td>${esc(f[0])}</td><td>${f[1]}</td><td>${f[2] || ''}</td></tr>`).join('')}</tbody></table></section>
       <section id="tribunal"><h2>Preguntas del <em>tribunal</em></h2>
-        <p class="mute" style="max-width:62ch;margin-bottom:22px">Intentá responder en voz alta antes de abrir cada una. Los puntos clave son lo que el tribunal espera escuchar.</p>
+        <p class="mute" style="max-width:62ch;margin-bottom:22px">Antes de abrir cada una, respondela en voz alta. Adentro tenés lo que el tribunal quiere escuchar.</p>
         ${u.tribunal.map(q => `<details class="q"><summary>${pillHTML(q.t)}<span>${q.q}</span></summary><div class="body"><div class="eyebrow">Puntos clave</div><ul class="keys">${q.k.map(k => `<li>${k}</li>`).join('')}</ul>${q.err ? `<div class="callout"><b>Error típico</b><br>${q.err}</div>` : ''}</div></details>`).join('')}</section>
       <section id="puentes"><h2>Puentes</h2>
         <ul class="list">${bridges.map(({ b, k }) => { const o = U(b.a == u.id ? b.b : b.a); return `<li><a href="#/bolillero?bridge=${k}" style="--c:${unitColor(o)}"><span class="rom">${o.rom}</span><div><h3>${esc(b.t)}</h3><p class="meta">Con la unidad ${o.rom}, ${esc(o.short)}</p></div><span class="meta">Practicar →</span></a></li>`; }).join('')}</ul></section>
@@ -298,20 +298,20 @@ route('/progreso', 'progreso', (p, app) => {
   let plan = '';
   if (days != null && days >= 0) {
     const n = Math.min(Math.max(days, 1), 10), per = Math.ceil(rank.length / n);
-    plan = `<p class="mute small">Faltan <strong>${days}</strong> días. Orden sugerido: empezá por lo más flojo y dejá los últimos días para defensas completas (3 bolillas).</p><table class="t"><tr><th>Día</th><th>Unidades</th><th>Rutina</th></tr>` +
+    plan = `<p class="mute small">Faltan <strong>${days}</strong> días. Arrancá por lo más flojo y guardate los últimos días para defensas completas de 3 bolillas.</p><table class="t"><tr><th>Día</th><th>Unidades</th><th>Rutina</th></tr>` +
       Array.from({ length: n }, (_, d) => { const us = rank.slice(d * per, (d + 1) * per).map(x => x.u); const last = d >= n - 2 && n > 3;
         return `<tr><td class="mono">D−${days - d}</td><td>${last ? 'Examen completo × 3 bolillas al azar' : us.map(x => x.rom).join(' · ') || 'Repaso libre'}</td><td class="small mute">${last ? 'Cronometrá, hablá en voz alta, repasá tarjetas falladas' : 'Leé el hilo, 1 bolilla en voz alta, 15 tarjetas, 1 deducción'}</td></tr>`; }).join('') + '</table>';
   } else plan = '<p class="mute small">Cargá la fecha de tu examen y armo un plan día por día.</p>';
-  app.innerHTML = `<header class="pagehead"><div class="eyebrow">Tu avance</div><h1>Panel de <em>control</em></h1><p>El dominio se actualiza con cada defensa, tarjeta, deducción y afirmación; lo reciente pesa más.</p></header><div style="height:36px"></div>
+  app.innerHTML = `<header class="pagehead"><div class="eyebrow">Tu avance</div><h1>Panel de <em>control</em></h1><p>Se actualiza cada vez que hacés una defensa, una tarjeta, una deducción o un verdadero/falso. Lo último que hiciste pesa más.</p></header><div style="height:36px"></div>
   <div class="grid g2"><div class="card"><h3>Dominio por unidad</h3>${radarSVG()}</div>
   <div class="card"><h3>Prioridades</h3>${rank.slice(0, 6).map(x => `<div class="bar"><a href="#/unidad/${x.u.id}" style="color:var(--ink);text-decoration:none">${x.u.rom} · ${esc(x.u.short)}</a><div class="meter"><i style="width:${Math.round((x.m || 0) * 100)}%"></i></div><span class="mono small">${pctTxt(x.m)}</span></div>`).join('')}
-  <p class="mute small">El dominio se actualiza con cada defensa, tarjeta, deducción y verdadero/falso (media móvil: lo reciente pesa más).</p></div></div>
+  <p class="mute small">Esto se mueve con todo lo que practicás; lo más reciente cuenta más.</p></div></div>
   <div class="sectionhead"><h2>Plan de <em>ataque</em></h2></div>
   <div class="card"><div class="row"><label for="exam">Fecha del examen</label><input type="date" id="exam" value="${S.exam || ''}" style="max-width:200px"></div>${plan}</div>
   <div class="sectionhead"><h2>Últimas defensas</h2></div>
-  <div class="card">${S.sessions.length ? `<table class="t"><tr><th>Fecha</th><th>Bolillas</th><th>Resultado</th><th>Rúbrica (CG1/CG4/CG9)</th></tr>${S.sessions.slice(-8).reverse().map(s => `<tr><td class="mono small">${new Date(s.t).toLocaleDateString('es-AR')}</td><td>${s.units.map(x => U(x).rom).join(' · ')}</td><td><strong>${Math.round(s.pct * 100)}%</strong> ${s.pct >= .6 ? '<span class="chip t">aprobado</span>' : '<span class="chip">a reforzar</span>'}</td><td class="small mute">${s.rubric ? s.rubric.join(' / ') : '—'}</td></tr>`).join('')}</table>` : '<span class="mute">Todavía no hiciste ninguna defensa simulada.</span>'}</div>
+  <div class="card">${S.sessions.length ? `<table class="t"><tr><th>Fecha</th><th>Bolillas</th><th>Resultado</th><th>Rúbrica (CG1/CG4/CG9)</th></tr>${S.sessions.slice(-8).reverse().map(s => `<tr><td class="mono small">${new Date(s.t).toLocaleDateString('es-AR')}</td><td>${s.units.map(x => U(x).rom).join(' · ')}</td><td><strong>${Math.round(s.pct * 100)}%</strong> ${s.pct >= .6 ? '<span class="chip t">aprobado</span>' : '<span class="chip">a reforzar</span>'}</td><td class="small mute">${s.rubric ? s.rubric.join(' / ') : '—'}</td></tr>`).join('')}</table>` : '<span class="mute">Todavía no hiciste ninguna defensa. ¿Arrancamos?</span>'}</div>
   <div class="sectionhead"><h2>Tus datos</h2></div>
-  <div class="card"><p class="mute small">Tu progreso se guarda en este navegador y nunca se sube a ningún servidor. Exportá una copia para pasarla a otro dispositivo.</p>
+  <div class="card"><p class="mute small">Tu progreso queda guardado en este navegador y no se sube a ningún lado. Si querés seguir en otro dispositivo, exportalo y después importalo allá.</p>
   <div class="row"><button class="btn sm" id="exp">Exportar progreso</button><label class="btn sm ghost" style="cursor:pointer">Importar<input type="file" id="imp" accept="application/json" hidden></label><button class="btn sm bad" id="rst">Borrar todo</button></div></div>`;
   $('#exam', app).addEventListener('change', e => { S.exam = e.target.value || null; Store.save(); Router.render(); });
   $('#exp', app).addEventListener('click', () => {
@@ -320,7 +320,7 @@ route('/progreso', 'progreso', (p, app) => {
   });
   $('#imp', app).addEventListener('change', e => {
     const f = e.target.files[0]; if (!f) return; const r = new FileReader();
-    r.onload = () => { try { Store.importJSON(r.result); toast('Progreso importado'); Router.render(); } catch (er) { toast('Archivo inválido'); } }; r.readAsText(f);
+    r.onload = () => { try { Store.importJSON(r.result); toast('Listo, ya tenés tu progreso acá'); Router.render(); } catch (er) { toast('Ese archivo no sirve; fijate que sea el que exportaste'); } }; r.readAsText(f);
   });
-  $('#rst', app).addEventListener('click', () => { if (confirm('¿Borrar todo tu progreso en este navegador?')) { Store.reset(); Router.render(); } });
+  $('#rst', app).addEventListener('click', () => { if (confirm('¿Seguro que querés borrar todo tu progreso? No hay vuelta atrás.')) { Store.reset(); Router.render(); } });
 });

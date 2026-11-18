@@ -12,14 +12,14 @@
   const dlg = document.createElement('dialog');
   dlg.className = 'pausa'; dlg.setAttribute('aria-labelledby', 'pausaT');
   dlg.innerHTML = `<form method="dialog">
-    <div class="eyebrow">Pausa de estudio</div>
-    <h2 id="pausaT">Un descanso <em>corto</em> rinde más</h2>
-    <p class="mute">Elegí cuánto dura. Cuando vuelvas a esta pestaña te muestro el tiempo que queda.</p>
+    <div class="eyebrow">Break</div>
+    <h2 id="pausaT">Cortá un rato, <em>te lo ganaste</em></h2>
+    <p class="mute">Elegí cuánto querés cortar. Cuando vuelvas te digo cuánto te queda.</p>
     <fieldset class="dur"><legend>Duración</legend>
       ${[5, 10, 15].map(m => `<label><input type="radio" name="dur" value="${m}" ${m === 5 ? 'checked' : ''}><span>${m} min</span></label>`).join('')}
     </fieldset>
     <div class="apps">${Object.entries(APPS).map(([k, [n]]) => `<button class="btn solid" value="${k}">Abrir ${n} <span class="arr" aria-hidden="true">↗</span></button>`).join('')}</div>
-    <div class="row foot"><button class="btn ghost" value="solo">Sólo descansar, sin apps</button><span class="sp"></span><button class="btn ghost" value="cancel">Cancelar</button></div>
+    <div class="row foot"><button class="btn ghost" value="solo">Nada de apps, sólo descansar</button><span class="sp"></span><button class="btn ghost" value="cancel">Cancelar</button></div>
   </form>`;
   document.body.appendChild(dlg);
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close('cancel'); }); // clic fuera
@@ -62,17 +62,17 @@
     if (p) {
       const left = Math.round((p.end - t) / 1000);
       if (left > 0) {
-        document.title = `Pausa · ${mmss(left)} — Física II`;
-        if (!document.hidden) showBar(`<span class="dot" aria-hidden="true"></span><span><strong>En pausa.</strong> Quedan <span class="mono">${mmss(left)}</span>.</span><span class="sp"></span>${APPS[p.app] ? `<button class="btn sm" data-a="app">Volver a ${APPS[p.app][0]}</button>` : ''}<button class="btn sm solid" data-a="end">Terminar la pausa</button>`);
+        document.title = `Break · ${mmss(left)} — Física II`;
+        if (!document.hidden) showBar(`<span class="dot" aria-hidden="true"></span><span><strong>Estás en break.</strong> Te quedan <span class="mono">${mmss(left)}</span>.</span><span class="sp"></span>${APPS[p.app] ? `<button class="btn sm" data-a="app">Volver a ${APPS[p.app][0]}</button>` : ''}<button class="btn sm solid" data-a="end">Ya vuelvo a estudiar</button>`);
       } else {
-        document.title = 'Se terminó la pausa — Física II';
-        if (!document.hidden) showBar(`<span class="dot done" aria-hidden="true"></span><span><strong>Se terminó la pausa.</strong> Retomá por tu unidad más floja.</span><span class="sp"></span><button class="btn sm" data-a="end">Cerrar</button><button class="btn sm solid" data-a="back">Retomar <span class="arr" aria-hidden="true">→</span></button>`);
+        document.title = '¡Volvé! Se terminó el break';
+        if (!document.hidden) showBar(`<span class="dot done" aria-hidden="true"></span><span><strong>Se terminó el break.</strong> Dale, volvé con tu unidad más floja.</span><span class="sp"></span><button class="btn sm" data-a="end">Cerrar</button><button class="btn sm solid" data-a="back">Volver a estudiar <span class="arr" aria-hidden="true">→</span></button>`);
       }
       return;
     }
     if (!document.hidden && !dlg.open) studied += dt; // sólo cuenta el tiempo con la pestaña visible
     if (studied >= SUGGEST_AFTER && bar.hidden && !inDefense())
-      showBar(`<span class="dot" aria-hidden="true"></span><span>Llevás <strong>${Math.round(studied / 60)} minutos</strong> de estudio. Un descanso corto ayuda a fijar lo que viste.</span><span class="sp"></span><button class="btn sm" data-a="later">Más tarde</button><button class="btn sm solid" data-a="open">Tomar una pausa</button>`);
+      showBar(`<span class="dot" aria-hidden="true"></span><span>Llevás <strong>${Math.round(studied / 60)} minutos</strong> dándole. Cortá un toque, que así se te fija mejor lo que viste.</span><span class="sp"></span><button class="btn sm" data-a="later">Ahora no</button><button class="btn sm solid" data-a="open">Tomarme un break</button>`);
   }
   setInterval(tick, 1000);
   document.addEventListener('visibilitychange', () => { last = now(); tick(); });
