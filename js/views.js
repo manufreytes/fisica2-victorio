@@ -94,7 +94,7 @@ function mountField(fig) {
     ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, RC, 0, 7); ctx.fill();
     ctx.strokeStyle = C.on; ctx.lineWidth = 1.6; ctx.lineCap = 'butt'; ctx.beginPath();
     ctx.moveTo(x - 5, y); ctx.lineTo(x + 5, y); if (c.q > 0) { ctx.moveTo(x, y - 5); ctx.lineTo(x, y + 5); } ctx.stroke();
-    ctx.fillStyle = C.ink; ctx.font = 'italic 400 15px "Source Serif", Georgia, serif'; ctx.textAlign = 'left';
+    ctx.fillStyle = col; ctx.font = 'italic 500 15px "Source Serif", Georgia, serif'; ctx.textAlign = 'left';
     ctx.fillText(c.q > 0 ? '+2q' : '−q', x + RC + 8, y - RC + 2);
   }
   function arrowAt(pts, frac) { // punta de flecha sobre la línea: sentido del campo
