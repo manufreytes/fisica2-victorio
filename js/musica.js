@@ -24,7 +24,7 @@
   panel.innerHTML = `<header><div><div class="eyebrow">Música de estudio</div><h2>Música para <em>meterle</em></h2></div>
       <button class="iconbtn" type="button" data-close aria-label="Cerrar el reproductor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>
     <div class="player"></div>
-    <footer><span class="mute small">Si entrás con tu cuenta de Spotify en este navegador, te pasa los temas enteros.</span><a class="link" href="${appUrl}" target="_blank" rel="noopener">Abrir en la app <span class="arr" aria-hidden="true">↗</span></a></footer>`;
+    <footer><span class="mute small">Si entrás con tu cuenta de Spotify en este navegador, te pasa los temas enteros. La música es para estudiar, no para cantar, eh.</span><a class="link" href="${appUrl}" target="_blank" rel="noopener">Abrir en la app <span class="arr" aria-hidden="true">↗</span></a></footer>`;
   document.body.appendChild(panel);
 
   let loaded = false;

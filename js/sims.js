@@ -357,7 +357,7 @@
 
   /* ---------- rutas del laboratorio ---------- */
   route('/lab', 'lab', (p, app) => {
-    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Laboratorio</div><h1>Experimentá <em>antes</em> de demostrar</h1><p>Siete simuladores para ver en vivo lo que dicen las fórmulas. La idea: primero <strong>adiviná</strong> qué va a pasar, después movelo y explicá en voz alta por qué dio distinto (o igual). Es justo lo que mira la rúbrica (CG4: “verifica que la solución coincide con las predicciones”).</p></header>
+    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Laboratorio</div><h1>Experimentá <em>antes</em> de demostrar</h1><p>Siete simuladores para ver en vivo lo que dicen las fórmulas. La idea: primero <strong>adiviná</strong> qué va a pasar, después movelo y explicá en voz alta por qué dio distinto (o igual). Es como jugar, pero aprendés. No te quejes. Es justo lo que mira la rúbrica (CG4: “verifica que la solución coincide con las predicciones”).</p></header>
     <div class="grid g3" style="margin-top:40px;row-gap:44px">${F2.sims.map(s => `<a class="card simcard" href="#/lab/${s.id}"><div class="glyph">${s.glyph}</div><div class="eyebrow">Simulador ${F2.sims.indexOf(s) + 1}</div><h3>${s.title}</h3><div class="row">${s.units.map(u => `<span class="chip" style="color:${unitColor(u)}">U. ${U(u).rom}</span>`).join('')}</div><p class="small mute" style="margin:0">${s.desc}</p></a>`).join('')}</div>`;
   });
   route('/lab/:id', 'lab', ({ id }, app) => {
