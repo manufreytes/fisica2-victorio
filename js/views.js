@@ -35,9 +35,17 @@ function constellation() {
       <circle class="disc" r="27" stroke="${col}"/><text class="n">${u.rom}</text><text class="l" y="56">${esc(u.short)}</text></g></g>`;
   }).join('');
   const intro = !constelDrawn && !reducedMotion(); constelDrawn = true;
-  return `<div class="constel${intro ? ' drawin' : ''}"><svg viewBox="0 0 1000 560" role="img" aria-label="Mapa de conexiones entre las doce unidades">${edges}${nodes}</svg>
-    <div class="legend">${Object.entries(BLOCK).map(([k, v]) => `<span><i style="background:${v}"></i>${k}</span>`).join('')}<span class="sp"></span><span>El anillo muestra tu dominio de cada unidad</span></div></div>
-    <div class="card bridgebox" id="bridgebox"><span class="mute">Cada línea es una conexión que el tribunal puede pedirte: “relacioná X con Y”. Tocá una para ver qué se espera.</span></div>`;
+  return `<div class="split">
+    <div class="side">
+      <div class="eyebrow">Fig. 2 · Mapa del programa</div>
+      <h2>La constelación de <em>Maxwell</em></h2>
+      <p>Las doce unidades y las ${F2.bridges.length} conexiones que el tribunal suele pedir: “relacioná X con Y”. El anillo de cada unidad indica tu dominio actual.</p>
+      <ul class="legend">${Object.entries(BLOCK).map(([k, v]) => `<li><i style="background:${v}"></i>${k}</li>`).join('')}</ul>
+      <div class="bridgebox" id="bridgebox"><span class="mute">Seleccioná una conexión en el mapa para ver los puntos que se esperan.</span></div>
+    </div>
+    <figure class="fig main"><div class="constel${intro ? ' drawin' : ''}"><svg viewBox="0 0 1000 560" role="img" aria-label="Mapa de conexiones entre las doce unidades">${edges}${nodes}</svg></div>
+      <figcaption><b>Fig. 2</b>Pasá el cursor por una unidad para ver sus conexiones; hacé clic en una línea para abrir el puente.</figcaption></figure>
+  </div>`;
 }
 
 /* ---------- campo de un dipolo (portada) ---------- */
@@ -82,27 +90,35 @@ function mountField(fig) {
   }
   function charge(c) {
     const x = c.x * W, y = c.y * H, col = c.q > 0 ? C.pos : C.neg;
-    ctx.fillStyle = col; ctx.globalAlpha = .13; ctx.beginPath(); ctx.arc(x, y, RC + 9, 0, 7); ctx.fill();
-    ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(x, y, RC, 0, 7); ctx.fill();
-    ctx.strokeStyle = C.on; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.beginPath();
+    ctx.globalAlpha = 1; ctx.fillStyle = C.panel; ctx.beginPath(); ctx.arc(x, y, RC + 5, 0, 7); ctx.fill();
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, RC, 0, 7); ctx.fill();
+    ctx.strokeStyle = C.on; ctx.lineWidth = 1.6; ctx.lineCap = 'butt'; ctx.beginPath();
     ctx.moveTo(x - 5, y); ctx.lineTo(x + 5, y); if (c.q > 0) { ctx.moveTo(x, y - 5); ctx.lineTo(x, y + 5); } ctx.stroke();
-    ctx.fillStyle = C.mute; ctx.font = '500 12px PlexMono, monospace'; ctx.textAlign = 'center';
-    ctx.fillText(c.q > 0 ? '+2q' : '−q', x, y + RC + 22);
+    ctx.fillStyle = C.ink; ctx.font = 'italic 400 15px "Source Serif", Georgia, serif'; ctx.textAlign = 'left';
+    ctx.fillText(c.q > 0 ? '+2q' : '−q', x + RC + 8, y - RC + 2);
   }
+  function arrowAt(pts, frac) { // punta de flecha sobre la línea: sentido del campo
+    const n = pts.length / 2; if (n < 12) return;
+    const j = Math.floor(n * frac) * 2, x = pts[j], y = pts[j + 1];
+    if (x < 8 || x > W - 8 || y < 8 || y > H - 8) return;
+    const a = Math.atan2(pts[j + 3] - y, pts[j + 2] - x), s = 5;
+    ctx.beginPath(); ctx.moveTo(x + s * Math.cos(a), y + s * Math.sin(a));
+    ctx.lineTo(x - s * Math.cos(a - .5), y - s * Math.sin(a - .5)); ctx.lineTo(x - s * Math.cos(a + .5), y - s * Math.sin(a + .5)); ctx.closePath(); ctx.fill();
+  }
+  let introDone = still;
   function draw(now) {
     ctx.clearRect(0, 0, W, H);
-    const intro = still ? 1 : Math.min(1, (now - t0) / 1700);
-    ctx.lineWidth = 1.15; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.lineWidth = 1; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    let done = true;
     lines.forEach((pts, i) => {
-      const f = still ? 1 : Math.max(0, Math.min(1, ((now - t0) - i * 45) / 1100));
+      const f = introDone ? 1 : Math.max(0, Math.min(1, ((now - t0) - i * 50) / 1300));
+      if (f < 1) done = false;
       const e = 1 - Math.pow(1 - f, 3), upto = Math.max(2, Math.floor(pts.length / 2 * e) * 2);
-      ctx.strokeStyle = C.ink; ctx.globalAlpha = .26; ctx.setLineDash([]); path(pts, upto); ctx.stroke();
-      if (intro >= 1 && !still) { // el sentido del campo: de + hacia −
-        ctx.globalAlpha = .75; ctx.strokeStyle = C.neg; ctx.setLineDash([1.5, 22]); ctx.lineDashOffset = -now / 38; ctx.lineWidth = 2.2;
-        path(pts, pts.length); ctx.stroke(); ctx.lineWidth = 1.15;
-      }
+      ctx.strokeStyle = C.mute; ctx.globalAlpha = .6; path(pts, upto); ctx.stroke();
+      if (f >= 1) { ctx.fillStyle = C.mute; ctx.globalAlpha = .85; arrowAt(pts, .42); }
     });
-    ctx.setLineDash([]); ctx.globalAlpha = 1;
+    if (done) introDone = true;
+    ctx.globalAlpha = 1;
     if (ptr && !drag && !nearCharge(ptr)) { // carga de prueba en el cursor
       const [ex, ey] = E(ptr[0], ptr[1]), m = Math.hypot(ex, ey) || 1, L = 30, ux = ex / m, uy = ey / m;
       const x2 = ptr[0] + ux * L, y2 = ptr[1] + uy * L;
@@ -113,8 +129,9 @@ function mountField(fig) {
     }
     Q.forEach(charge);
   }
-  const loop = now => { draw(now); raf = visible && !document.hidden ? requestAnimationFrame(loop) : 0; };
-  const kick = () => { if (!raf && !still) raf = requestAnimationFrame(loop); else if (still) draw(performance.now()); };
+  // Sólo se anima durante el trazado inicial; después redibuja únicamente al interactuar.
+  const loop = now => { draw(now); raf = !introDone && visible && !document.hidden ? requestAnimationFrame(loop) : 0; };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
   const local = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
   const nearCharge = p => Q.find(c => Math.hypot(p[0] - c.x * W, p[1] - c.y * H) < RC + 10);
   cv.addEventListener('pointermove', e => {
@@ -178,36 +195,34 @@ route('/', 'home', (p, app) => {
   const allvf = F2.units.flatMap(u => u.vf.map((v, i) => ({ u, v })));
   const trap = allvf[dayIdx % allvf.length];
   let exam = '';
-  if (S.exam) { const d = Math.ceil((new Date(S.exam + 'T09:00:00') - Date.now()) / 864e5); if (d >= 0) exam = `<div class="stat"><b>${d}</b><span>días al examen</span></div>`; }
+  if (S.exam) { const d = Math.ceil((new Date(S.exam + 'T09:00:00') - Date.now()) / 864e5); if (d >= 0) exam = `<div><b>${d}</b><span>días al examen</span></div>`; }
   app.innerHTML = `
   <section class="hero">
     <div class="hero-copy">
-      <div class="eyebrow">Física 2 · Electromagnetismo y óptica</div>
+      <div class="eyebrow">Electromagnetismo y óptica · Doce unidades</div>
       <h1>Defendé la materia <em>hablando</em>, no memorizando.</h1>
-      <p class="lead">El examen tiene una parte teórica <strong>oral</strong>. Acá practicás frente a un tribunal simulado: sacás una bolilla, respondés en voz alta y te corregís con los puntos que espera la cátedra. Se aprueba con el 60 %.</p>
-      <div class="row"><a class="btn solid" href="#/bolillero">Sacar bolilla <span class="arr" aria-hidden="true">→</span></a><a class="btn" href="#/entrenar/mazo">Repasar tarjetas${due ? ' <span class="mono small mute">' + due + '</span>' : ''}</a><a class="btn ghost" href="#/lab">Laboratorio</a></div>
+      <p class="lead">La parte teórica del examen es oral. Esta plataforma la simula: sacás una bolilla, respondés en voz alta frente a un tribunal y contrastás tu respuesta con los puntos que espera la cátedra. Se aprueba con el 60 %.</p>
+      <div class="row"><a class="btn solid" href="#/bolillero">Sacar una bolilla <span class="arr" aria-hidden="true">→</span></a><a class="btn ghost" href="#/unidades">Ver el programa</a></div>
     </div>
-    <figure class="field" id="field" role="img" aria-label="Simulación interactiva de las líneas de campo de un dipolo con cargas +2q y −q">
-      <span class="tag">Unidad I · Líneas de campo</span><canvas></canvas>
-      <figcaption><span>Arrastrá las cargas. La mitad de las líneas de +2q termina en −q; el resto se va al infinito.</span><span class="eq">Φ = q/ε₀</span></figcaption>
+    <figure class="fig">
+      <div class="field" id="field" role="img" aria-label="Simulación interactiva de las líneas de campo de un dipolo con cargas +2q y −q"><canvas></canvas></div>
+      <figcaption><b>Fig. 1</b>Líneas de campo de un dipolo asimétrico. La mitad del flujo que sale de +2q termina en −q; el resto escapa al infinito (ley de Gauss). Arrastrá las cargas para modificar la configuración.</figcaption>
     </figure>
   </section>
-  <div class="sectionhead"><h2>Hoy te toca</h2></div>
-  <div class="grid g3">
-    <div class="card"><div class="eyebrow">Tu punto más flojo</div><h3 style="margin-top:.6em">Unidad ${weakest[0].rom}: ${esc(weakest[0].short)}</h3>
-      <p class="mute small">${weakest[1] == null ? 'Todavía sin practicar.' : 'Dominio estimado: ' + pctTxt(weakest[1]) + '.'}</p><a class="btn sm" href="#/bolillero?u=${weakest[0].id}">Sacar esa bolilla</a></div>
-    <div class="card"><div class="eyebrow">Repaso espaciado</div><h3 style="margin-top:.6em">${due} tarjeta${due == 1 ? '' : 's'} para hoy</h3>
-      <p class="mute small">Las que fallás vuelven antes; las que sabés, cada vez más espaciadas.</p><a class="btn sm" href="#/entrenar/mazo">Empezar repaso</a></div>
-    <div class="card"><div class="eyebrow">Trampa del día · U. ${trap.u.rom}</div><p style="margin:.6em 0">${trap.v[0]}</p>
-      <details class="verdict"><summary>Ver veredicto</summary><p><strong>${trap.v[1] ? 'Verdadero' : 'Falso'}.</strong> ${trap.v[2]}</p></details></div>
-  </div>
-  <div class="card statstrip">
-    <div class="stat"><b>${Math.round(Store.total() * 100)}<small>%</small></b><span>dominio global</span></div>
-    <div class="stat"><b>${Store.streak()}</b><span>días seguidos</span></div>
-    <div class="stat"><b>${S.sessions.length}</b><span>defensas simuladas</span></div>
-    ${exam || '<div class="stat"><b>—</b><span><a href="#/progreso">Cargá la fecha del examen</a></span></div>'}
-  </div>
-  <div class="sectionhead"><h2>La constelación de <em>Maxwell</em></h2></div>
+  <section class="today" aria-label="Hoy te toca">
+    <div><div class="eyebrow">Tu punto más flojo</div><h3>Unidad ${weakest[0].rom}. ${esc(weakest[0].short)}</h3>
+      <p class="grow">${weakest[1] == null ? 'Todavía sin practicar. Es un buen lugar para empezar.' : 'Dominio estimado: ' + pctTxt(weakest[1]) + '.'}</p><a class="link" href="#/bolillero?u=${weakest[0].id}">Defender esta unidad <span class="arr" aria-hidden="true">→</span></a></div>
+    <div><div class="eyebrow">Repaso espaciado</div><h3>${due} tarjeta${due == 1 ? '' : 's'} para hoy</h3>
+      <p class="grow">Las que fallás vuelven antes; las que sabés, cada vez más espaciadas.</p><a class="link" href="#/entrenar/mazo">Empezar el repaso <span class="arr" aria-hidden="true">→</span></a></div>
+    <div><div class="eyebrow">Afirmación del día · Unidad ${trap.u.rom}</div><p class="trap grow">${trap.v[0]}</p>
+      <details class="verdict"><summary>¿Verdadera o falsa?</summary><p><strong>${trap.v[1] ? 'Verdadera' : 'Falsa'}.</strong> ${trap.v[2]}</p></details></div>
+  </section>
+  <section class="figures" aria-label="Tu avance">
+    <div><b>${Math.round(Store.total() * 100)}<small>%</small></b><span>Dominio global del programa</span></div>
+    <div><b>${Store.streak()}</b><span>Días seguidos de estudio</span></div>
+    <div><b>${S.sessions.length}</b><span>Defensas simuladas</span></div>
+    ${exam || '<div><b>—</b><span><a href="#/progreso">Cargá la fecha del examen</a></span></div>'}
+  </section>
   ${constellation()}`;
   bindConstellation(app);
   mountField($('#field', app));
@@ -216,11 +231,11 @@ route('/', 'home', (p, app) => {
 /* ---------- unidades ---------- */
 route('/unidades', 'unidades', (p, app) => {
   const blocks = [...new Set(F2.units.map(u => u.block))];
-  app.innerHTML = `<div class="eyebrow">Programa 10-04067 · 12 unidades</div><h1>Las <em>doce</em> bolillas</h1>
-  <p class="mute" style="max-width:62ch">Cada unidad trae resumen, fórmulas, preguntas de tribunal con lo que se espera, deducción y los puentes hacia otras unidades.</p>` +
-    blocks.map(b => `<div class="sectionhead"><h2 style="color:${BLOCK[b]}">${b}</h2></div><div class="grid g3">` +
-      F2.units.filter(u => u.block === b).map(u => `<a class="card ucard fade" href="#/unidad/${u.id}" style="--c:${unitColor(u)}"><span class="rom">${u.rom}</span><h3>${esc(u.title)}</h3><span class="mute small">${u.book}</span>
-      <div><div class="meter"><i style="width:${Math.round((Store.mastery(u.id) || 0) * 100)}%"></i></div></div></a>`).join('') + '</div>').join('');
+  app.innerHTML = `<header class="pagehead"><div class="eyebrow">Programa 10-04067</div><h1>Las <em>doce</em> bolillas</h1>
+    <p>Cada unidad reúne el hilo conceptual, las fórmulas clave, las preguntas de tribunal con lo que se espera escuchar y los puentes hacia otras unidades.</p></header>` +
+    blocks.map(b => { const us = F2.units.filter(u => u.block === b); return `<section class="toc"><header><i style="background:${BLOCK[b]}"></i><h2>${b}</h2><span>${us.length} unidad${us.length > 1 ? 'es' : ''}</span></header><ol>` +
+      us.map(u => `<li><a class="toc-row" href="#/unidad/${u.id}" style="--c:${unitColor(u)}"><span class="rom">${u.rom}</span><div><h3>${esc(u.title)}</h3><div class="tm">${u.temas.slice(0, 3).map(esc).join(' · ')}${u.temas.length > 3 ? '…' : ''}</div></div>
+      <span class="ch">${esc(u.book)}</span><div class="meter" title="Dominio: ${pctTxt(Store.mastery(u.id))}"><i style="width:${Math.round((Store.mastery(u.id) || 0) * 100)}%"></i></div><span class="arr" aria-hidden="true">→</span></a></li>`).join('') + '</ol></section>'; }).join('');
 });
 
 route('/unidad/:id', 'unidades', ({ id }, app) => {
@@ -229,27 +244,42 @@ route('/unidad/:id', 'unidades', ({ id }, app) => {
   const bridges = F2.bridges.map((b, k) => ({ b, k })).filter(x => x.b.a == u.id || x.b.b == u.id);
   const tpls = TPL.filter(t => t.u.includes(u.id));
   const sims = F2.sims.filter(s => s.units.includes(u.id));
+  const secs = [['hilo', 'El hilo'], ['formulas', 'Fórmulas clave'], ['tribunal', 'Preguntas del tribunal'], ['puentes', 'Puentes'], ...(tpls.length ? [['tpl', 'Laboratorio']] : []), ['consejo', 'Consejo de defensa']];
   app.innerHTML = `
-  <div class="unit-head fade" style="--c:${c}">
-    <div class="row"><a class="chip" href="#/unidades">← Unidades</a><span class="chip">${u.block}</span><span class="chip">Sears–Zemansky vol. 2, ${u.book}</span></div>
-    <div class="row" style="align-items:flex-end;gap:20px"><div class="rom">${u.rom}</div><h1 style="margin:0">${esc(u.title)}</h1></div>
-    <div class="idea">${u.idea}</div>
-    <div class="row">${u.temas.map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div>
-    <div class="row" style="margin-top:8px"><a class="btn solid" href="#/bolillero?u=${u.id}">Defender esta unidad</a>
-      <a class="btn" href="#/entrenar/mazo?u=${u.id}">Tarjetas</a><a class="btn" href="#/entrenar/deduccion?u=${u.id}">Armar deducción</a><a class="btn" href="#/entrenar/vf?u=${u.id}">Verdadero / falso</a>
-      ${sims.map(s => `<a class="btn ghost" href="#/lab/${s.id}">Simulador: ${esc(s.title)}</a>`).join('')}</div>
+  <header class="unit-head" style="--c:${c}">
+    <nav class="crumbs" aria-label="Ubicación"><a href="#/unidades">Unidades</a><span aria-hidden="true">/</span><span>${u.block}</span><span aria-hidden="true">/</span><span>Sears–Zemansky, vol. 2, ${esc(u.book)}</span></nav>
+    <div class="rom" aria-hidden="true">${u.rom}</div>
+    <div class="ttl"><div class="eyebrow">Unidad ${u.rom}</div><h1>${esc(u.title)}</h1><p class="idea">${u.idea}</p>
+      <div class="temas">${u.temas.map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div></div>
+  </header>
+  <div class="doc" style="--c:${c}">
+    <aside>
+      <nav aria-label="En esta unidad">${secs.map(([id, t]) => `<a href="#/unidad/${u.id}" data-jump="${id}">${t}</a>`).join('')}</nav>
+      <div class="acts"><a class="btn solid" href="#/bolillero?u=${u.id}">Defender esta unidad <span class="arr" aria-hidden="true">→</span></a></div>
+      <div class="more"><a class="link" href="#/entrenar/mazo?u=${u.id}">Tarjetas de repaso</a><a class="link" href="#/entrenar/deduccion?u=${u.id}">Armar la deducción</a><a class="link" href="#/entrenar/vf?u=${u.id}">Verdadero o falso</a>
+        ${sims.map(s => `<a class="link" href="#/lab/${s.id}">Simulador: ${esc(s.title)}</a>`).join('')}</div>
+    </aside>
+    <article>
+      <section id="hilo"><h2>El <em>hilo</em></h2><div class="prose">${md(u.resumen)}</div></section>
+      <section id="formulas"><h2>Fórmulas clave</h2>
+        <table class="formulas"><thead><tr><th scope="col">Magnitud o ley</th><th scope="col">Expresión</th><th scope="col">Observaciones</th></tr></thead>
+        <tbody>${u.formulas.map(f => `<tr><td>${esc(f[0])}</td><td>${f[1]}</td><td>${f[2] || ''}</td></tr>`).join('')}</tbody></table></section>
+      <section id="tribunal"><h2>Preguntas del <em>tribunal</em></h2>
+        <p class="mute" style="max-width:62ch;margin-bottom:22px">Intentá responder en voz alta antes de abrir cada una. Los puntos clave son lo que el tribunal espera escuchar.</p>
+        ${u.tribunal.map(q => `<details class="q"><summary>${pillHTML(q.t)}<span>${q.q}</span></summary><div class="body"><div class="eyebrow">Puntos clave</div><ul class="keys">${q.k.map(k => `<li>${k}</li>`).join('')}</ul>${q.err ? `<div class="callout"><b>Error típico</b><br>${q.err}</div>` : ''}</div></details>`).join('')}</section>
+      <section id="puentes"><h2>Puentes</h2>
+        <ul class="list">${bridges.map(({ b, k }) => { const o = U(b.a == u.id ? b.b : b.a); return `<li><a href="#/bolillero?bridge=${k}" style="--c:${unitColor(o)}"><span class="rom">${o.rom}</span><div><h3>${esc(b.t)}</h3><p class="meta">Con la unidad ${o.rom}, ${esc(o.short)}</p></div><span class="meta">Practicar →</span></a></li>`; }).join('')}</ul></section>
+      ${tpls.length ? `<section id="tpl"><h2>Laboratorio</h2><ul class="list">${tpls.map(t => `<li><div><span class="rom">${t.n}</span><div><h3>${t.t}</h3><p class="mute small">Pregunta típica: ${t.q}</p></div><span class="meta">TPL ${t.n}</span></div></li>`).join('')}</ul></section>` : ''}
+      <section id="consejo"><h2>Consejo de defensa</h2><p class="advice">${u.consejo}</p></section>
+    </article>
   </div>
-  <div class="sectionhead"><h2>El <em>hilo</em></h2></div><div class="card" style="max-width:78ch">${md(u.resumen)}</div>
-  <div class="sectionhead"><h2>Fórmulas <em>clave</em></h2></div>
-  <div class="grid g3">${u.formulas.map(f => `<div class="card fcard"><div class="nm">${esc(f[0])}</div><div>${f[1]}</div>${f[2] ? `<div class="nt">${f[2]}</div>` : ''}</div>`).join('')}</div>
-  <div class="sectionhead"><h2>Preguntas del <em>tribunal</em></h2></div>
-  <p class="mute small">Intentá responder en voz alta antes de abrir cada una. Las claves son lo que el tribunal espera escuchar.</p>
-  ${u.tribunal.map(q => `<details class="q"><summary>${pillHTML(q.t)}<span>${q.q}</span></summary><div class="body"><div class="eyebrow">Puntos clave</div><ul class="keys">${q.k.map(k => `<li>${k}</li>`).join('')}</ul>${q.err ? `<div class="callout"><b>Error típico</b><br>${q.err}</div>` : ''}</div></details>`).join('')}
-  <div class="sectionhead"><h2>Puentes</h2></div>
-  <div class="grid g2">${bridges.map(({ b, k }) => { const o = U(b.a == u.id ? b.b : b.a); return `<a class="card ucard" href="#/bolillero?bridge=${k}" style="--c:${unitColor(o)}"><span class="rom">${o.rom}</span><h3>${esc(b.t)}</h3><span class="mute small">con ${esc(o.short)} · practicar en voz alta →</span></a>`; }).join('')}</div>
-  ${tpls.length ? `<div class="sectionhead"><h2>Laboratorio (TPL)</h2></div><div class="grid g2">${tpls.map(t => `<div class="card"><div class="eyebrow">TPL ${t.n}</div><h3 style="margin:.3em 0">${t.t}</h3><p class="mute small">Pregunta típica: ${t.q}</p></div>`).join('')}</div>` : ''}
-  <div class="callout good" style="margin-top:26px"><b>Consejo de defensa</b><br>${u.consejo}</div>
-  <div class="row" style="margin-top:26px">${prev ? `<a class="btn ghost" href="#/unidad/${prev.id}">← ${prev.rom} · ${esc(prev.short)}</a>` : ''}<span class="sp"></span>${next ? `<a class="btn ghost" href="#/unidad/${next.id}">${next.rom} · ${esc(next.short)} →</a>` : ''}</div>`;
+  <nav class="pager" aria-label="Unidades vecinas">${prev ? `<a href="#/unidad/${prev.id}"><small>← Unidad anterior</small><span>${prev.rom}. ${esc(prev.short)}</span></a>` : ''}${next ? `<a class="nx" href="#/unidad/${next.id}"><small>Unidad siguiente →</small><span>${next.rom}. ${esc(next.short)}</span></a>` : ''}</nav>`;
+  // Índice lateral: salto a sección y sección actual
+  const links = $$('[data-jump]', app);
+  links.forEach(a => a.addEventListener('click', e => { e.preventDefault(); $('#' + a.dataset.jump, app).scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' }); }));
+  const io = new IntersectionObserver(ents => ents.forEach(en => { if (en.isIntersecting) links.forEach(a => a.classList.toggle('cur', a.dataset.jump === en.target.id)); }), { rootMargin: '-30% 0px -60% 0px' });
+  $$('article > section', app).forEach(s => io.observe(s));
+  onLeave(() => io.disconnect());
 });
 
 /* ---------- progreso ---------- */
@@ -272,7 +302,7 @@ route('/progreso', 'progreso', (p, app) => {
       Array.from({ length: n }, (_, d) => { const us = rank.slice(d * per, (d + 1) * per).map(x => x.u); const last = d >= n - 2 && n > 3;
         return `<tr><td class="mono">D−${days - d}</td><td>${last ? 'Examen completo × 3 bolillas al azar' : us.map(x => x.rom).join(' · ') || 'Repaso libre'}</td><td class="small mute">${last ? 'Cronometrá, hablá en voz alta, repasá tarjetas falladas' : 'Leé el hilo, 1 bolilla en voz alta, 15 tarjetas, 1 deducción'}</td></tr>`; }).join('') + '</table>';
   } else plan = '<p class="mute small">Cargá la fecha de tu examen y armo un plan día por día.</p>';
-  app.innerHTML = `<div class="eyebrow">Tu avance</div><h1>Panel de <em>control</em></h1>
+  app.innerHTML = `<header class="pagehead"><div class="eyebrow">Tu avance</div><h1>Panel de <em>control</em></h1><p>El dominio se actualiza con cada defensa, tarjeta, deducción y afirmación; lo reciente pesa más.</p></header><div style="height:36px"></div>
   <div class="grid g2"><div class="card"><h3>Dominio por unidad</h3>${radarSVG()}</div>
   <div class="card"><h3>Prioridades</h3>${rank.slice(0, 6).map(x => `<div class="bar"><a href="#/unidad/${x.u.id}" style="color:var(--ink);text-decoration:none">${x.u.rom} · ${esc(x.u.short)}</a><div class="meter"><i style="width:${Math.round((x.m || 0) * 100)}%"></i></div><span class="mono small">${pctTxt(x.m)}</span></div>`).join('')}
   <p class="mute small">El dominio se actualiza con cada defensa, tarjeta, deducción y verdadero/falso (media móvil: lo reciente pesa más).</p></div></div>

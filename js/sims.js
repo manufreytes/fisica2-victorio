@@ -357,9 +357,8 @@
 
   /* ---------- rutas del laboratorio ---------- */
   route('/lab', 'lab', (p, app) => {
-    app.innerHTML = `<div class="eyebrow">Laboratorio</div><h1>Experimentá <em>antes</em> de demostrar</h1>
-    <p class="mute" style="max-width:64ch">Siete simuladores para ver lo que las fórmulas dicen. Método: <strong>predecí</strong> lo que va a pasar, movelo, y explicá la diferencia en voz alta. Eso es exactamente lo que evalúa la rúbrica (CG4: “verifica que la solución coincide con las predicciones”).</p>
-    <div class="grid g3" style="margin-top:20px">${F2.sims.map(s => `<a class="card simcard fade" href="#/lab/${s.id}"><div class="glyph">${s.glyph}</div><h3 style="margin:.3em 0 0">${s.title}</h3><div class="row">${s.units.map(u => `<span class="chip" style="color:${unitColor(u)}">U. ${U(u).rom}</span>`).join('')}</div><p class="small mute" style="margin:0">${s.desc}</p></a>`).join('')}</div>`;
+    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Laboratorio</div><h1>Experimentá <em>antes</em> de demostrar</h1><p>Siete simuladores para ver lo que las fórmulas dicen. Método: <strong>predecí</strong> lo que va a pasar, movelo, y explicá la diferencia en voz alta. Eso es exactamente lo que evalúa la rúbrica (CG4: “verifica que la solución coincide con las predicciones”).</p></header>
+    <div class="grid g3" style="margin-top:40px;row-gap:44px">${F2.sims.map(s => `<a class="card simcard" href="#/lab/${s.id}"><div class="glyph">${s.glyph}</div><div class="eyebrow">Simulador ${F2.sims.indexOf(s) + 1}</div><h3>${s.title}</h3><div class="row">${s.units.map(u => `<span class="chip" style="color:${unitColor(u)}">U. ${U(u).rom}</span>`).join('')}</div><p class="small mute" style="margin:0">${s.desc}</p></a>`).join('')}</div>`;
   });
   route('/lab/:id', 'lab', ({ id }, app) => {
     const s = F2.sims.find(x => x.id === id); if (!s) { location.hash = '#/lab'; return; }

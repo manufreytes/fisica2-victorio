@@ -36,8 +36,7 @@
   function bridgeUnit(i) { return F2.bridges[i].a; }
 
   function setup(app) {
-    app.innerHTML = `<div class="eyebrow">Simulador de tribunal</div><h1>El <em>bolillero</em></h1>
-    <p class="mute" style="max-width:64ch">Sacás una bolilla y el tribunal te hace cuatro preguntas: <strong>exposición libre</strong>, una de <strong>definición o deducción</strong>, una de <strong>aplicación o cruzada</strong> y una <strong>pregunta puente</strong> con otra unidad. Respondés en voz alta (o escribís), después ves lo que esperaban y te autoevaluás.</p>
+    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Simulador de tribunal</div><h1>El <em>bolillero</em></h1><p>Sacás una bolilla y el tribunal te hace cuatro preguntas: <strong>exposición libre</strong>, una de <strong>definición o deducción</strong>, una de <strong>aplicación o cruzada</strong> y una <strong>pregunta puente</strong> con otra unidad. Respondés en voz alta (o escribís), después ves lo que esperaban y te autoevaluás.</p></header><div style="height:36px"></div>
     <div class="grid g2" style="align-items:start">
       <div class="card"><div class="cage" id="cage"></div><div class="drawn" id="drawn"><span class="mute">Girá el bolillero para sacar tu bolilla</span></div>
         <div class="row" style="justify-content:center"><button class="btn solid" id="spin">Girar bolillero</button></div></div>

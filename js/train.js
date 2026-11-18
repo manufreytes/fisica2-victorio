@@ -3,17 +3,17 @@
   const MODES = [['mazo', 'Mazo de repaso'], ['deduccion', 'Armá la deducción'], ['vf', 'Verdadero / falso']];
 
   function header(mode, u) {
-    return `<div class="eyebrow">Entrenamiento</div><h1>${mode === 'mazo' ? 'Repaso <em>espaciado</em>' : mode === 'deduccion' ? 'Armá la <em>deducción</em>' : 'Verdadero o falso: <em>las trampas</em>'}</h1>
+    return `<header class="pagehead"><div class="eyebrow">Entrenamiento</div><h1>${mode === 'mazo' ? 'Repaso <em>espaciado</em>' : mode === 'deduccion' ? 'Armá la <em>deducción</em>' : 'Verdadero o falso: <em>las trampas</em>'}</h1></header><div style="height:28px"></div>
     <div class="row" style="margin-bottom:16px"><div class="tabs" style="margin:0">${MODES.map(m => `<a class="tab ${m[0] === mode ? 'on' : ''}" href="#/entrenar/${m[0]}${u ? '?u=' + u : ''}" style="text-decoration:none">${m[1]}</a>`).join('')}</div><span class="sp"></span>
       <select id="uf" style="max-width:260px" aria-label="Filtrar por unidad"><option value="">Todas las unidades</option>${F2.units.map(x => `<option value="${x.id}" ${x.id == u ? 'selected' : ''}>${x.rom} · ${esc(x.short)}</option>`).join('')}</select></div>`;
   }
   function bindFilter(app, mode) { $('#uf', app).addEventListener('change', e => { location.hash = '#/entrenar/' + mode + (e.target.value ? '?u=' + e.target.value : ''); }); }
 
   route('/entrenar', 'entrenar', (p, app) => {
-    app.innerHTML = `<div class="eyebrow">Entrenamiento</div><h1>Tres formas de <em>fijar</em> lo que sabés</h1><div class="grid g3" style="margin-top:20px">
-      <a class="card ucard" href="#/entrenar/mazo" style="--c:var(--trace3)"><span class="rom">▤</span><h3>Mazo de repaso</h3><span class="mute small">Tarjetas con repaso espaciado: ${Store.dueCards().length} para hoy.</span></a>
-      <a class="card ucard" href="#/entrenar/deduccion" style="--c:var(--trace)"><span class="rom">∑</span><h3>Armá la deducción</h3><span class="mute small">Ordená los pasos de las demostraciones que te piden en el pizarrón.</span></a>
-      <a class="card ucard" href="#/entrenar/vf" style="--c:var(--trace2)"><span class="rom">?</span><h3>Verdadero / falso</h3><span class="mute small">Las afirmaciones “casi correctas” que usa el tribunal para pisar.</span></a></div>`;
+    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Entrenamiento</div><h1>Tres formas de <em>fijar</em> lo que sabés</h1><p>Repaso espaciado para retener, deducciones para el pizarrón y afirmaciones engañosas para no caer en las trampas del tribunal.</p></header><div class="grid g3" style="margin-top:40px">
+      <a class="card ucard" href="#/entrenar/mazo" ><span class="rom">↻</span><h3>Mazo de repaso</h3><span class="mute small">Tarjetas con repaso espaciado: ${Store.dueCards().length} para hoy.</span></a>
+      <a class="card ucard" href="#/entrenar/deduccion" ><span class="rom">∑</span><h3>Armá la deducción</h3><span class="mute small">Ordená los pasos de las demostraciones que te piden en el pizarrón.</span></a>
+      <a class="card ucard" href="#/entrenar/vf" ><span class="rom" style="font-size:1.5rem">V/F</span><h3>Verdadero / falso</h3><span class="mute small">Las afirmaciones “casi correctas” que usa el tribunal para pisar.</span></a></div>`;
   });
 
   /* ---------- mazo ---------- */

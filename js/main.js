@@ -1,7 +1,7 @@
 /* Arranque: tema, router, service worker */
 (function () {
   const root = document.documentElement, btn = $('#themeBtn');
-  const META = { dark: '#0d1017', light: '#eceef1' };
+  const META = { dark: '#0A1929', light: '#F7F9FC' };
   const apply = t => {
     root.dataset.theme = t; try { localStorage.setItem('f2d.theme', t); } catch (e) {}
     document.querySelector('meta[name=theme-color]').content = META[t];
@@ -10,13 +10,9 @@
   btn.addEventListener('click', () => {
     const t = root.dataset.theme === 'dark' ? 'light' : 'dark';
     if (!document.startViewTransition || reducedMotion()) { apply(t); return; }
-    // Revelado circular desde el botón
-    const r = btn.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
-    const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    // Fundido suave de toda la página
     root.classList.add('theme-vt');
     const vt = document.startViewTransition(() => apply(t));
-    vt.ready.then(() => root.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${end}px at ${x}px ${y}px)`] },
-      { duration: 560, easing: 'cubic-bezier(.2,.8,.2,1)', pseudoElement: '::view-transition-new(root)' })).catch(() => {});
     vt.finished.catch(() => {}).then(() => root.classList.remove('theme-vt'));
   });
 
