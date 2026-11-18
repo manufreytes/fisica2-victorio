@@ -36,7 +36,7 @@
   function bridgeUnit(i) { return F2.bridges[i].a; }
 
   function setup(app) {
-    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Simulador de tribunal</div><h1>El <em>bolillero</em></h1><p>Sacás una bolilla y el tribunal te hace cuatro preguntas: <strong>exposición libre</strong>, una de <strong>definición o deducción</strong>, una de <strong>aplicación o cruzada</strong> y una <strong>pregunta puente</strong> con otra unidad. Respondés en voz alta (o escribís), después ves lo que esperaban y te ponés la nota vos. Con honestidad, no como en el truco.</p></header><div style="height:36px"></div>
+    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Simulacro de oral</div><h1>Bolillero</h1><p>Sacás una bolilla y el tribunal te hace cuatro preguntas: <strong>exposición libre</strong>, una de <strong>definición o deducción</strong>, una de <strong>aplicación o cruzada</strong> y una <strong>pregunta puente</strong> con otra unidad. Respondés en voz alta (o escribís), después ves lo que esperaban y te ponés la nota vos. Sin hacer trampa.</p></header><div style="height:36px"></div>
     <div class="grid g2" style="align-items:start">
       <div class="card"><div class="cage" id="cage"></div><div class="drawn" id="drawn"><span class="mute">Girá el bolillero y rezá</span></div>
         <div class="row" style="justify-content:center"><button class="btn solid" id="spin">Girar bolillero</button></div></div>
@@ -44,7 +44,7 @@
         <div><label>Modo</label>${segs('mode', [['1', 'Una bolilla'], ['3', 'Examen completo (3)']], '1')}</div>
         <div><label for="time">Tiempo por pregunta</label><select id="time"><option value="60">1 minuto</option><option value="90">1 min 30 s</option><option value="120" selected>2 minutos</option><option value="180">3 minutos</option><option value="300">5 minutos</option></select></div>
         <div><label>Cómo respondés</label>${segs('voice', [['1', SR ? 'Voz + escrito' : 'Escrito'], ['0', 'Sólo en voz alta']], SR ? '1' : '1')}
-          <p class="small mute">${SR ? 'El dictado usa el micrófono y pasa a texto lo que decís. Si te da vergüenza, escribí o hablá sin grabar. Igual nadie te escucha, tranqui.' : 'Tu navegador no tiene dictado, así que escribí o hablá en voz alta. A la antigua, como los grandes.'}</p></div>
+          <p class="small mute">${SR ? 'El dictado usa el micrófono y pasa a texto lo que decís. Si no querés usarlo, escribí o hablá sin grabar.' : 'Tu navegador no tiene dictado. Escribí o hablá en voz alta.'}</p></div>
         <div><label for="pickU">…o elegí vos la unidad</label><select id="pickU"><option value="">— al azar —</option>${F2.units.map(u => `<option value="${u.id}">${u.rom} · ${esc(u.short)}</option>`).join('')}</select></div>
       </div></div></div>`;
     cage(app);
@@ -149,7 +149,7 @@
       rec = new SR(); rec.lang = 'es-AR'; rec.continuous = true; rec.interimResults = false;
       rec.onresult = e => { for (let i = e.resultIndex; i < e.results.length; i++) if (e.results[i].isFinal) ans.value += (ans.value && !/\s$/.test(ans.value) ? ' ' : '') + e.results[i][0].transcript.trim(); metrics(); };
       rec.onend = () => { if (recOn) { try { rec.start(); } catch (e) {} } };
-      rec.onerror = ev => { if (ev.error === 'not-allowed') { recOn = false; mic.textContent = '● Dictar'; toast('No me diste permiso para el micrófono. ¿Qué escondés?'); } };
+      rec.onerror = ev => { if (ev.error === 'not-allowed') { recOn = false; mic.textContent = '● Dictar'; toast('No diste permiso para el micrófono. ¿Qué escondés?'); } };
       try { rec.start(); recOn = true; mic.textContent = '■ Detener dictado'; } catch (e) { toast('No pude arrancar el dictado. Probá de nuevo'); }
     });
 
@@ -171,7 +171,7 @@
       clearInterval(tmr); stopRec(); $('#done', app).disabled = true; metrics();
       const rv = $('#review', app);
       rv.innerHTML = `<div class="sectionhead" style="margin-top:22px"><h3 style="margin:0">Lo que el tribunal esperaba</h3></div>
-        <p class="small mute">${st.hint ? 'Tildá los temas que cubriste.' : 'Tildá lo que dijiste con claridad y sin mirar.'} Y no te mientas, vaguito, que el tribunal no te va a regalar nada.</p>
+        <p class="small mute">${st.hint ? 'Tildá los temas que cubriste.' : 'Tildá lo que dijiste con claridad y sin mirar.'} Sin mentirte, que en el oral no te van a regalar nada.</p>
         ${st.k.map((k, i) => `<label class="check" style="text-transform:none;letter-spacing:0;font:inherit;color:inherit"><input type="checkbox" data-i="${i}"><span>${k}</span></label>`).join('')}
         ${st.err ? `<div class="callout"><b>Error típico</b><br>${st.err}</div>` : ''}
         <div class="row" style="margin-top:14px"><span class="mono" id="live">0 / ${st.k.length}</span><span class="sp"></span><button class="btn solid" id="next">${S.i + 1 >= S.steps.length ? 'Ver resultado' : 'Siguiente pregunta →'}</button></div>`;
@@ -184,23 +184,23 @@
       });
       rv.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-    $('#quit', app).addEventListener('click', e => { if (S.res.length && !confirm('¿Ya te rendís, vaguito? Lo que respondiste ya cuenta para tu progreso, pero el tribunal no te deja irte así.')) e.preventDefault(); });
+    $('#quit', app).addEventListener('click', e => { if (S.res.length && !confirm('¿Ya te rendís? Lo que respondiste ya cuenta, pero qué poco aguante.')) e.preventDefault(); });
     ans.focus();
   }
 
   /* ---------- resumen ---------- */
   function summary(app, S) {
     const pct = S.res.reduce((a, r) => a + r.pct, 0) / S.res.length, uids = [...new Set(S.res.map(r => r.u))];
-    const verdict = pct >= .8 ? ['Muy sólido', 'Mirá vos, el gordo sabe. Igual hacete una defensa completa de 3 bolillas, no te agrandes.'] : pct >= .6 ? ['Aprobado (≥ 60 %)', 'Pasás raspando el 60 %. Repasá lo que te faltó, que con esto no te alcanza para presumir.'] : ['Todavía no alcanza', 'Uff. Volvé al “hilo” de la unidad y a las deducciones, y después probá de nuevo. Menos TikTok, gordo.'];
+    const verdict = pct >= .8 ? ['Muy sólido', 'Mirá vos, algo sabés. Hacete una defensa de 3 bolillas igual, no te agrandes.'] : pct >= .6 ? ['Aprobado (≥ 60 %)', 'Pasás raspando. Repasá lo que te faltó, que así no da para agrandarse.'] : ['Todavía no alcanza', 'Mal. Leé el resumen de la unidad y las deducciones, y probá de nuevo. Menos TikTok.'];
     const words = S.res.reduce((a, r) => a + r.words, 0), fill = S.res.reduce((a, r) => a + r.fill, 0);
     const miss = S.res.filter(r => r.miss.length);
     app.innerHTML = `<div class="eyebrow">Resultado de la defensa</div><div class="row" style="align-items:flex-end"><div class="score" style="color:${pct >= .6 ? 'var(--good)' : 'var(--warn)'}">${Math.round(pct * 100)}%</div><div><h2 style="margin:0">${verdict[0]}</h2><span class="mute">${verdict[1]}</span></div></div>
     <div class="grid g2" style="margin-top:18px;align-items:start">
       <div class="card"><h3>Por pregunta</h3>${S.res.map(r => `<div class="bar"><span>${U(r.u).rom} · ${TYPES[r.type]}</span><div class="meter"><i style="width:${Math.round(r.pct * 100)}%"></i></div><span class="mono small">${Math.round(r.pct * 100)}%</span></div>`).join('')}
         ${words ? `<p class="small mute">Escribiste/dictaste ${words} palabras (${fill} muletillas).</p>` : ''}</div>
-      <div class="card"><h3>Autoevaluación con la rúbrica</h3><p class="small mute">La cátedra no mira sólo lo que sabés, también cómo lo explicás. ¿Dónde te ponés? Sin agrandarte.</p>
+      <div class="card"><h3>Autoevaluación con la rúbrica</h3><p class="small mute">No miran sólo lo que sabés, también cómo lo explicás. ¿Cómo te fue? Sin agrandarte.</p>
         ${RUBRIC.map((r, i) => `<div style="margin:10px 0"><label for="rb${i}">${r[0]} · ${r[1]}</label><div class="small mute" style="margin:2px 0 6px">${r[2]}</div><select id="rb${i}">${LEVELS.map((l, j) => `<option ${j === 2 ? 'selected' : ''}>${l}</option>`).join('')}</select></div>`).join('')}</div></div>
-    ${miss.length ? `<div class="sectionhead"><h2>Lo que <em>falló</em></h2></div><div class="card"><p class="small mute">Lo que te faltó decir lo pasás a tarjetas y lo repasás. No hay drama, todos fuimos vagos alguna vez.</p>${miss.map(r => `<details class="q"><summary>${pillHTML(r.type)}<span>${r.q}</span></summary><div class="body"><ul class="keys">${r.miss.map(k => `<li>${k}</li>`).join('')}</ul></div></details>`).join('')}<div class="row" style="margin-top:12px"><button class="btn" id="mk">Crear tarjetas con mis faltantes</button></div></div>` : '<div class="callout good" style="margin-top:20px"><b>Impecable</b><br>No te salteaste nada. ¿Quién sos y qué hiciste con el vago de siempre?</div>'}
+    ${miss.length ? `<div class="sectionhead"><h2>Lo que <em>falló</em></h2></div><div class="card"><p class="small mute">Lo que te faltó lo pasás a tarjetas y lo repasás.</p>${miss.map(r => `<details class="q"><summary>${pillHTML(r.type)}<span>${r.q}</span></summary><div class="body"><ul class="keys">${r.miss.map(k => `<li>${k}</li>`).join('')}</ul></div></details>`).join('')}<div class="row" style="margin-top:12px"><button class="btn" id="mk">Crear tarjetas con mis faltantes</button></div></div>` : '<div class="callout good" style="margin-top:20px"><b>Impecable</b><br>No te salteaste nada. ¿Quién sos y qué hiciste con el vago de siempre?</div>'}
     <div class="row" style="margin-top:22px"><a class="btn solid" href="#/bolillero">Otra bolilla</a><a class="btn" href="#/progreso">Ver mi progreso</a>${uids.length === 1 ? `<a class="btn ghost" href="#/unidad/${uids[0]}">Repasar la unidad</a>` : ''}</div>`;
     math(app);
     const sess = { t: Date.now(), units: uids, pct, rubric: null }; Store.s.sessions.push(sess); Store.save();

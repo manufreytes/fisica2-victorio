@@ -72,7 +72,7 @@ const Router = (() => {
       $$('#nav a').forEach(a => { const on = a.dataset.r === r.name; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
       moveInd(lastPath === null);
       app.innerHTML = '';
-      try { r.fn(params, app); } catch (e) { console.error(e); app.innerHTML = '<div class="card">Uy, algo se rompió (no fuiste vos, por esta vez). Recargá la página y probá de nuevo.</div>'; }
+      try { r.fn(params, app); } catch (e) { console.error(e); app.innerHTML = '<div class="card">Se rompió algo. Esta vez no fuiste vos. Recargá la página.</div>'; }
       math(app);
       const changed = path !== lastPath;
       if (changed) stagger(app);

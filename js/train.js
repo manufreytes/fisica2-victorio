@@ -3,17 +3,17 @@
   const MODES = [['mazo', 'Mazo de repaso'], ['deduccion', 'Armá la deducción'], ['vf', 'Verdadero / falso']];
 
   function header(mode, u) {
-    return `<header class="pagehead"><div class="eyebrow">Entrenamiento</div><h1>${mode === 'mazo' ? 'Repaso <em>espaciado</em>' : mode === 'deduccion' ? 'Armá la <em>deducción</em>' : 'Verdadero o falso: <em>las trampas</em>'}</h1></header><div style="height:28px"></div>
+    return `<header class="pagehead"><div class="eyebrow">Entrenamiento</div><h1>${mode === 'mazo' ? 'Tarjetas' : mode === 'deduccion' ? 'Armá la <em>deducción</em>' : 'Verdadero o <em>falso</em>'}</h1></header><div style="height:28px"></div>
     <div class="row" style="margin-bottom:16px"><div class="tabs" style="margin:0">${MODES.map(m => `<a class="tab ${m[0] === mode ? 'on' : ''}" href="#/entrenar/${m[0]}${u ? '?u=' + u : ''}" style="text-decoration:none">${m[1]}</a>`).join('')}</div><span class="sp"></span>
       <select id="uf" style="max-width:260px" aria-label="Filtrar por unidad"><option value="">Todas las unidades</option>${F2.units.map(x => `<option value="${x.id}" ${x.id == u ? 'selected' : ''}>${x.rom} · ${esc(x.short)}</option>`).join('')}</select></div>`;
   }
   function bindFilter(app, mode) { $('#uf', app).addEventListener('change', e => { location.hash = '#/entrenar/' + mode + (e.target.value ? '?u=' + e.target.value : ''); }); }
 
   route('/entrenar', 'entrenar', (p, app) => {
-    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Entrenamiento</div><h1>Tres formas de <em>fijar</em> lo que sabés</h1><p>Tarjetas para que no se te olvide, deducciones para el pizarrón y frases tramposas para que no te agarre el tribunal. Elegí una y dejá de procrastinar.</p></header><div class="grid g3" style="margin-top:40px">
+    app.innerHTML = `<header class="pagehead"><div class="eyebrow">Entrenamiento</div><h1>Entrenar</h1><p>Tarjetas para que no se te olvide, deducciones para el pizarrón y frases tramposas. Elegí una y dejá de boludear.</p></header><div class="grid g3" style="margin-top:40px">
       <a class="card ucard" href="#/entrenar/mazo" ><span class="rom">↻</span><h3>Mazo de repaso</h3><span class="mute small">Tarjetas con repaso espaciado: ${Store.dueCards().length} para hoy.</span></a>
       <a class="card ucard" href="#/entrenar/deduccion" ><span class="rom">∑</span><h3>Armá la deducción</h3><span class="mute small">Ordená los pasos de las demostraciones que te piden en el pizarrón.</span></a>
-      <a class="card ucard" href="#/entrenar/vf" ><span class="rom" style="font-size:1.5rem">V/F</span><h3>Verdadero / falso</h3><span class="mute small">Las frases “casi correctas” con las que el tribunal te quiere hacer pisar el palito. Y vos pisás seguido.</span></a></div>`;
+      <a class="card ucard" href="#/entrenar/vf" ><span class="rom" style="font-size:1.5rem">V/F</span><h3>Verdadero / falso</h3><span class="mute small">Frases casi correctas para hacerte pisar el palito. Y vos pisás seguido.</span></a></div>`;
   });
 
   /* ---------- mazo ---------- */
@@ -37,7 +37,7 @@
         body = `<div class="row small mono mute" style="margin-bottom:8px"><span>${idx + 1} / ${queue.length}</span><span class="chip" style="color:${unitColor(c.unit)}">U. ${U(c.unit).rom} · ${esc(U(c.unit).short)}</span></div>
         <div class="card flip fade" id="flip"><div>${shown ? `<div class="eyebrow" style="margin-bottom:12px">Respuesta</div><div style="font-size:1.05rem;font-family:var(--sans);text-align:left">${c.b}</div>` : c.f}</div></div>
         ${shown ? `<div class="rate" style="margin-top:12px">${[['Otra vez', '<10 min'], ['Difícil', ''], ['Bien', ''], ['Fácil', '']].map((r, i) => `<button class="btn ${i == 0 ? 'bad' : i == 3 ? 'solid' : ''}" data-r="${i}">${r[0]}<small>[${i + 1}]</small></button>`).join('')}</div>`
-          : `<div class="row" style="margin-top:12px;justify-content:center"><button class="btn solid" id="show">Mostrar respuesta <span class="kbd">espacio</span></button></div><p class="small mute" style="text-align:center">Primero decila en voz alta, después mirá. Ya sé que querías espiar.</p>`}`;
+          : `<div class="row" style="margin-top:12px;justify-content:center"><button class="btn solid" id="show">Mostrar respuesta <span class="kbd">espacio</span></button></div><p class="small mute" style="text-align:center">Decila en voz alta antes de mirar. Ya sé que querías espiar.</p>`}`;
       }
       app.innerHTML = header('mazo', u) + body; bindFilter(app, 'mazo'); math(app);
       const more = $('#more', app); if (more) more.onclick = () => { build(true); draw(); };
@@ -94,7 +94,7 @@
         Store.bump(uid, ok ? 1 : (n / tot) * .6, .25); if (ok) Store.s.ded[uid] = (Store.s.ded[uid] || 0) + 1; Store.save();
         draw(); const first = correct.indexOf(false);
         $('#msg', app).innerHTML = ok ? `<div class="callout good" style="margin-top:14px"><b>¡Perfecto!</b><br>Ahora el desafío de verdad: reconstruila en voz alta sin mirar, justificando cada paso (¿por qué simetría?, ¿por qué esta superficie?).</div>`
-          : `<div class="callout" style="margin-top:14px"><b>${n} de ${tot} en su lugar</b><br>El primer error está en tu paso ${first + 1}. Pensá qué tiene que pasar antes de ese paso. Dale, que vos podés (creo).</div>`;
+          : `<div class="callout" style="margin-top:14px"><b>${n} de ${tot} en su lugar</b><br>El primer error está en tu paso ${first + 1}. Pensá qué tiene que pasar antes de ese paso.</div>`;
       };
     };
     draw();

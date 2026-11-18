@@ -37,14 +37,14 @@ function constellation() {
   const intro = !constelDrawn && !reducedMotion(); constelDrawn = true;
   return `<div class="split">
     <div class="side">
-      <div class="eyebrow">Fig. 2 · Mapa del programa</div>
-      <h2>La constelación de <em>Maxwell</em></h2>
-      <p>Las doce unidades y las ${F2.bridges.length} conexiones que te puede tirar el tribunal: “relacioná X con Y”. El anillo de cada unidad te muestra cuánto la tenés (spoiler: poco).</p>
+      <div class="eyebrow">Fig. 2 · Conexiones</div>
+      <h2>Cómo se <em>conectan</em> las unidades</h2>
+      <p>Las doce unidades y las ${F2.bridges.length} conexiones que te pueden tirar en el oral: “relacioná X con Y”. El anillo de cada unidad es cuánto la tenés. Spoiler: poco.</p>
       <ul class="legend">${Object.entries(BLOCK).map(([k, v]) => `<li><i style="background:${v}"></i>${k}</li>`).join('')}</ul>
-      <div class="bridgebox" id="bridgebox"><span class="mute">Tocá una línea del mapa y te muestro qué esperan que digas. Dale, que no se toca sola.</span></div>
+      <div class="bridgebox" id="bridgebox"><span class="mute">Tocá una línea y te muestro qué tenés que decir.</span></div>
     </div>
     <figure class="fig main"><div class="constel${intro ? ' drawin' : ''}"><svg viewBox="0 0 1000 560" role="img" aria-label="Mapa de conexiones entre las doce unidades">${edges}${nodes}</svg></div>
-      <figcaption><b>Fig. 2</b>Pasá el mouse por una unidad para ver con cuáles se conecta, y hacé clic en una línea para abrir el puente.</figcaption></figure>
+      <figcaption><b>Fig. 2</b>Pasá el mouse por una unidad para ver con cuáles se conecta. Clic en una línea para abrir el puente.</figcaption></figure>
   </div>`;
 }
 
@@ -199,21 +199,21 @@ route('/', 'home', (p, app) => {
   app.innerHTML = `
   <section class="hero">
     <div class="hero-copy">
-      <div class="eyebrow">Electromagnetismo y óptica · Doce unidades</div>
-      <h1>Defendé la materia <em>hablando</em>, no memorizando.</h1>
-      <p class="lead">La teoría se rinde oral, así que acá la practicás tal cual: sacás una bolilla, respondés en voz alta como si tuvieras al tribunal enfrente y después comparás con lo que espera la cátedra. Con el 60&nbsp;% aprobás. Sí, gordo, hay que hablar. Y en voz alta.</p>
-      <div class="row"><a class="btn solid" href="#/bolillero">Sacar una bolilla <span class="arr" aria-hidden="true">→</span></a><a class="btn ghost" href="#/unidades">Ver el programa</a></div>
+      <div class="eyebrow">Física II · Electromagnetismo y óptica</div>
+      <h1>Practicá el oral <em>acá</em>.</h1>
+      <p class="lead">Sacás una bolilla, te hacen preguntas, respondés en voz alta y después ves qué te faltó. Con el 60&nbsp;% aprobás. Sí, hay que hablar en voz alta, no te hagas el boludo.</p>
+      <div class="row"><a class="btn solid" href="#/bolillero">Sacar una bolilla <span class="arr" aria-hidden="true">→</span></a><a class="btn ghost" href="#/unidades">Ver las unidades</a></div>
     </div>
     <figure class="fig">
       <div class="field" id="field" role="img" aria-label="Simulación interactiva de las líneas de campo de un dipolo con cargas +2q y −q"><canvas></canvas></div>
-      <figcaption><b>Fig. 1</b>Líneas de campo de un dipolo asimétrico. La mitad del flujo que sale de +2q termina en −q; el resto escapa al infinito (ley de Gauss). Arrastrá las cargas, que no muerden.</figcaption>
+      <figcaption><b>Fig. 1</b>Un dipolo con +2q y −q. La mitad de las líneas que salen de +2q terminan en −q y el resto se va al infinito (Gauss). Arrastrá las cargas, no muerden.</figcaption>
     </figure>
   </section>
   <section class="today" aria-label="Hoy te toca">
     <div><div class="eyebrow">Tu punto más flojo</div><h3>Unidad ${weakest[0].rom}. ${esc(weakest[0].short)}</h3>
-      <p class="grow">${weakest[1] == null ? 'Ni la abriste, vaguito. Arrancá por acá.' : 'La tenés al ' + pctTxt(weakest[1]) + '. Flojito, flojito. Dale una vuelta más.'}</p><a class="link" href="#/bolillero?u=${weakest[0].id}">Defender esta unidad <span class="arr" aria-hidden="true">→</span></a></div>
+      <p class="grow">${weakest[1] == null ? 'Ni la abriste. Arrancá por acá.' : 'La tenés al ' + pctTxt(weakest[1]) + '. Flojo. Dale otra vuelta.'}</p><a class="link" href="#/bolillero?u=${weakest[0].id}">Defender esta unidad <span class="arr" aria-hidden="true">→</span></a></div>
     <div><div class="eyebrow">Repaso espaciado</div><h3>${due} tarjeta${due == 1 ? '' : 's'} para hoy</h3>
-      <p class="grow">Las que fallás vuelven antes; las que sabés, cada vez más espaciadas. Te tiene fichado.</p><a class="link" href="#/entrenar/mazo">Empezar el repaso <span class="arr" aria-hidden="true">→</span></a></div>
+      <p class="grow">Las que le errás vuelven antes. Las que sabés, cada vez menos.</p><a class="link" href="#/entrenar/mazo">Empezar el repaso <span class="arr" aria-hidden="true">→</span></a></div>
     <div><div class="eyebrow">Afirmación del día · Unidad ${trap.u.rom}</div><p class="trap grow">${trap.v[0]}</p>
       <details class="verdict"><summary>¿Verdadera o falsa?</summary><p><strong>${trap.v[1] ? 'Verdadera' : 'Falsa'}.</strong> ${trap.v[2]}</p></details></div>
   </section>
@@ -221,7 +221,7 @@ route('/', 'home', (p, app) => {
     <div><b>${Math.round(Store.total() * 100)}<small>%</small></b><span>Dominio global del programa</span></div>
     <div><b>${Store.streak()}</b><span>Días seguidos de estudio</span></div>
     <div><b>${S.sessions.length}</b><span>Defensas simuladas</span></div>
-    ${exam || '<div><b>—</b><span><a href="#/progreso">Cargá la fecha del examen</a></span></div>'}
+    ${exam || '<div><b>—</b><span><a href="#/progreso">Poné la fecha del examen</a></span></div>'}
   </section>
   ${constellation()}`;
   bindConstellation(app);
@@ -231,8 +231,8 @@ route('/', 'home', (p, app) => {
 /* ---------- unidades ---------- */
 route('/unidades', 'unidades', (p, app) => {
   const blocks = [...new Set(F2.units.map(u => u.block))];
-  app.innerHTML = `<header class="pagehead"><div class="eyebrow">Programa 10-04067</div><h1>Las <em>doce</em> bolillas</h1>
-    <p>En cada una tenés el hilo de la unidad, las fórmulas que no te pueden faltar, las preguntas que te puede hacer el tribunal (con lo que quieren escuchar) y cómo se conecta con las demás. Te la dejé servida, gordo.</p></header>` +
+  app.innerHTML = `<header class="pagehead"><div class="eyebrow">Programa 10-04067</div><h1>Unidades</h1>
+    <p>En cada una: el resumen, las fórmulas, las preguntas que te pueden hacer (con lo que quieren escuchar) y con qué se conecta. Más servido, imposible.</p></header>` +
     blocks.map(b => { const us = F2.units.filter(u => u.block === b); return `<section class="toc"><header><i style="background:${BLOCK[b]}"></i><h2>${b}</h2><span>${us.length} unidad${us.length > 1 ? 'es' : ''}</span></header><ol>` +
       us.map(u => `<li><a class="toc-row" href="#/unidad/${u.id}" style="--c:${unitColor(u)}"><span class="rom">${u.rom}</span><div><h3>${esc(u.title)}</h3><div class="tm">${u.temas.slice(0, 3).map(esc).join(' · ')}${u.temas.length > 3 ? '…' : ''}</div></div>
       <span class="ch">${esc(u.book)}</span><div class="meter" title="Dominio: ${pctTxt(Store.mastery(u.id))}"><i style="width:${Math.round((Store.mastery(u.id) || 0) * 100)}%"></i></div><span class="arr" aria-hidden="true">→</span></a></li>`).join('') + '</ol></section>'; }).join('');
@@ -244,7 +244,7 @@ route('/unidad/:id', 'unidades', ({ id }, app) => {
   const bridges = F2.bridges.map((b, k) => ({ b, k })).filter(x => x.b.a == u.id || x.b.b == u.id);
   const tpls = TPL.filter(t => t.u.includes(u.id));
   const sims = F2.sims.filter(s => s.units.includes(u.id));
-  const secs = [['hilo', 'El hilo'], ['formulas', 'Fórmulas clave'], ['tribunal', 'Preguntas del tribunal'], ['puentes', 'Puentes'], ...(tpls.length ? [['tpl', 'Laboratorio']] : []), ['consejo', 'Consejo de defensa']];
+  const secs = [['hilo', 'Resumen'], ['formulas', 'Fórmulas clave'], ['tribunal', 'Preguntas'], ['puentes', 'Puentes'], ...(tpls.length ? [['tpl', 'Laboratorio']] : []), ['consejo', 'Tip para el oral']];
   app.innerHTML = `
   <header class="unit-head" style="--c:${c}">
     <nav class="crumbs" aria-label="Ubicación"><a href="#/unidades">Unidades</a><span aria-hidden="true">/</span><span>${u.block}</span><span aria-hidden="true">/</span><span>Sears–Zemansky, vol. 2, ${esc(u.book)}</span></nav>
@@ -260,17 +260,17 @@ route('/unidad/:id', 'unidades', ({ id }, app) => {
         ${sims.map(s => `<a class="link" href="#/lab/${s.id}">Simulador: ${esc(s.title)}</a>`).join('')}</div>
     </aside>
     <article>
-      <section id="hilo"><h2>El <em>hilo</em></h2><div class="prose">${md(u.resumen)}</div></section>
+      <section id="hilo"><h2>Resumen</h2><div class="prose">${md(u.resumen)}</div></section>
       <section id="formulas"><h2>Fórmulas clave</h2>
         <table class="formulas"><thead><tr><th scope="col">Magnitud o ley</th><th scope="col">Expresión</th><th scope="col">Observaciones</th></tr></thead>
         <tbody>${u.formulas.map(f => `<tr><td>${esc(f[0])}</td><td>${f[1]}</td><td>${f[2] || ''}</td></tr>`).join('')}</tbody></table></section>
-      <section id="tribunal"><h2>Preguntas del <em>tribunal</em></h2>
-        <p class="mute" style="max-width:62ch;margin-bottom:22px">Antes de abrir cada una, respondela en voz alta. Y no hagas trampa abriéndola primero, que te conozco.</p>
+      <section id="tribunal"><h2>Preguntas que te pueden hacer</h2>
+        <p class="mute" style="max-width:62ch;margin-bottom:22px">Respondé en voz alta antes de abrir. Y no espíes primero, vago.</p>
         ${u.tribunal.map(q => `<details class="q"><summary>${pillHTML(q.t)}<span>${q.q}</span></summary><div class="body"><div class="eyebrow">Puntos clave</div><ul class="keys">${q.k.map(k => `<li>${k}</li>`).join('')}</ul>${q.err ? `<div class="callout"><b>Error típico</b><br>${q.err}</div>` : ''}</div></details>`).join('')}</section>
       <section id="puentes"><h2>Puentes</h2>
         <ul class="list">${bridges.map(({ b, k }) => { const o = U(b.a == u.id ? b.b : b.a); return `<li><a href="#/bolillero?bridge=${k}" style="--c:${unitColor(o)}"><span class="rom">${o.rom}</span><div><h3>${esc(b.t)}</h3><p class="meta">Con la unidad ${o.rom}, ${esc(o.short)}</p></div><span class="meta">Practicar →</span></a></li>`; }).join('')}</ul></section>
       ${tpls.length ? `<section id="tpl"><h2>Laboratorio</h2><ul class="list">${tpls.map(t => `<li><div><span class="rom">${t.n}</span><div><h3>${t.t}</h3><p class="mute small">Pregunta típica: ${t.q}</p></div><span class="meta">TPL ${t.n}</span></div></li>`).join('')}</ul></section>` : ''}
-      <section id="consejo"><h2>Consejo de defensa</h2><p class="advice">${u.consejo}</p></section>
+      <section id="consejo"><h2>Tip para el oral</h2><p class="advice">${u.consejo}</p></section>
     </article>
   </div>
   <nav class="pager" aria-label="Unidades vecinas">${prev ? `<a href="#/unidad/${prev.id}"><small>← Unidad anterior</small><span>${prev.rom}. ${esc(prev.short)}</span></a>` : ''}${next ? `<a class="nx" href="#/unidad/${next.id}"><small>Unidad siguiente →</small><span>${next.rom}. ${esc(next.short)}</span></a>` : ''}</nav>`;
@@ -298,20 +298,20 @@ route('/progreso', 'progreso', (p, app) => {
   let plan = '';
   if (days != null && days >= 0) {
     const n = Math.min(Math.max(days, 1), 10), per = Math.ceil(rank.length / n);
-    plan = `<p class="mute small">Faltan <strong>${days}</strong> días. Arrancá por lo más flojo y guardate los últimos días para defensas completas de 3 bolillas. Nada de dejar todo para el final, gordo vago.</p><table class="t"><tr><th>Día</th><th>Unidades</th><th>Rutina</th></tr>` +
+    plan = `<p class="mute small">Faltan <strong>${days}</strong> días. Arrancá por lo más flojo y dejá los últimos días para defensas de 3 bolillas. Nada de dejar todo para el final, vago.</p><table class="t"><tr><th>Día</th><th>Unidades</th><th>Rutina</th></tr>` +
       Array.from({ length: n }, (_, d) => { const us = rank.slice(d * per, (d + 1) * per).map(x => x.u); const last = d >= n - 2 && n > 3;
         return `<tr><td class="mono">D−${days - d}</td><td>${last ? 'Examen completo × 3 bolillas al azar' : us.map(x => x.rom).join(' · ') || 'Repaso libre'}</td><td class="small mute">${last ? 'Cronometrá, hablá en voz alta, repasá tarjetas falladas' : 'Leé el hilo, 1 bolilla en voz alta, 15 tarjetas, 1 deducción'}</td></tr>`; }).join('') + '</table>';
-  } else plan = '<p class="mute small">Cargá la fecha del examen y te armo un plan día por día. Así no te agarra la noche anterior, como siempre.</p>';
-  app.innerHTML = `<header class="pagehead"><div class="eyebrow">Tu avance</div><h1>Panel de <em>control</em></h1><p>Se actualiza cada vez que hacés una defensa, una tarjeta, una deducción o un verdadero/falso. Lo último pesa más, así que no vivas de glorias pasadas.</p></header><div style="height:36px"></div>
+  } else plan = '<p class="mute small">Poné la fecha del examen y te armo un plan por día. Así no te agarra la noche anterior, como siempre.</p>';
+  app.innerHTML = `<header class="pagehead"><div class="eyebrow">Tu progreso</div><h1>Cómo <em>venís</em></h1><p>Se actualiza con cada cosa que hacés. Lo último pesa más, así que no vivas de lo que estudiaste hace un mes.</p></header><div style="height:36px"></div>
   <div class="grid g2"><div class="card"><h3>Dominio por unidad</h3>${radarSVG()}</div>
   <div class="card"><h3>Prioridades</h3>${rank.slice(0, 6).map(x => `<div class="bar"><a href="#/unidad/${x.u.id}" style="color:var(--ink);text-decoration:none">${x.u.rom} · ${esc(x.u.short)}</a><div class="meter"><i style="width:${Math.round((x.m || 0) * 100)}%"></i></div><span class="mono small">${pctTxt(x.m)}</span></div>`).join('')}
-  <p class="mute small">Esto se mueve si practicás. Si no, queda quieto como vos en la cama.</p></div></div>
-  <div class="sectionhead"><h2>Plan de <em>ataque</em></h2></div>
+  <p class="mute small">Esto sube si practicás. Si no, queda quieto, como vos.</p></div></div>
+  <div class="sectionhead"><h2>Plan hasta el examen</h2></div>
   <div class="card"><div class="row"><label for="exam">Fecha del examen</label><input type="date" id="exam" value="${S.exam || ''}" style="max-width:200px"></div>${plan}</div>
   <div class="sectionhead"><h2>Últimas defensas</h2></div>
-  <div class="card">${S.sessions.length ? `<table class="t"><tr><th>Fecha</th><th>Bolillas</th><th>Resultado</th><th>Rúbrica (CG1/CG4/CG9)</th></tr>${S.sessions.slice(-8).reverse().map(s => `<tr><td class="mono small">${new Date(s.t).toLocaleDateString('es-AR')}</td><td>${s.units.map(x => U(x).rom).join(' · ')}</td><td><strong>${Math.round(s.pct * 100)}%</strong> ${s.pct >= .6 ? '<span class="chip t">aprobado</span>' : '<span class="chip">a reforzar</span>'}</td><td class="small mute">${s.rubric ? s.rubric.join(' / ') : '—'}</td></tr>`).join('')}</table>` : '<span class="mute">Cero defensas. Cero. ¿Qué estuviste haciendo, vaguito?</span>'}</div>
+  <div class="card">${S.sessions.length ? `<table class="t"><tr><th>Fecha</th><th>Bolillas</th><th>Resultado</th><th>Rúbrica (CG1/CG4/CG9)</th></tr>${S.sessions.slice(-8).reverse().map(s => `<tr><td class="mono small">${new Date(s.t).toLocaleDateString('es-AR')}</td><td>${s.units.map(x => U(x).rom).join(' · ')}</td><td><strong>${Math.round(s.pct * 100)}%</strong> ${s.pct >= .6 ? '<span class="chip t">aprobado</span>' : '<span class="chip">a reforzar</span>'}</td><td class="small mute">${s.rubric ? s.rubric.join(' / ') : '—'}</td></tr>`).join('')}</table>` : '<span class="mute">Cero defensas. ¿Qué estuviste haciendo?</span>'}</div>
   <div class="sectionhead"><h2>Tus datos</h2></div>
-  <div class="card"><p class="mute small">Tu progreso queda guardado en este navegador y no se sube a ningún lado. Si querés seguir en otro dispositivo, exportalo y después importalo allá. Son dos clics, no te vas a cansar.</p>
+  <div class="card"><p class="mute small">Tu progreso queda en este navegador y no se sube a ningún lado. Para pasarlo a otro dispositivo, exportalo acá e importalo allá. Son dos clics.</p>
   <div class="row"><button class="btn sm" id="exp">Exportar progreso</button><label class="btn sm ghost" style="cursor:pointer">Importar<input type="file" id="imp" accept="application/json" hidden></label><button class="btn sm bad" id="rst">Borrar todo</button></div></div>`;
   $('#exam', app).addEventListener('change', e => { S.exam = e.target.value || null; Store.save(); Router.render(); });
   $('#exp', app).addEventListener('click', () => {
@@ -320,7 +320,7 @@ route('/progreso', 'progreso', (p, app) => {
   });
   $('#imp', app).addEventListener('change', e => {
     const f = e.target.files[0]; if (!f) return; const r = new FileReader();
-    r.onload = () => { try { Store.importJSON(r.result); toast('Listo, ya tenés tu progreso acá. Ahora a estudiar'); Router.render(); } catch (er) { toast('Ese archivo no sirve, gordo. Fijate que sea el que exportaste'); } }; r.readAsText(f);
+    r.onload = () => { try { Store.importJSON(r.result); toast('Listo, progreso importado. Ahora estudiá'); Router.render(); } catch (er) { toast('Ese archivo no sirve. Tiene que ser el que exportaste'); } }; r.readAsText(f);
   });
-  $('#rst', app).addEventListener('click', () => { if (confirm('¿Seguro que querés borrar todo? No hay vuelta atrás, y mirá que te costó (bueno, poco).')) { Store.reset(); Router.render(); } });
+  $('#rst', app).addEventListener('click', () => { if (confirm('¿Borrás todo? No hay vuelta atrás. Igual tampoco era tanto.')) { Store.reset(); Router.render(); } });
 });
