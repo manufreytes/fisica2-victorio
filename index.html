@@ -1,21 +1,24 @@
 <!doctype html>
-<html lang="es" data-theme="dark">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Física 2 · Defensa Oral — Sears–Zemansky</title>
 <meta name="description" content="Plataforma de estudio y simulador de defensa oral para Física 2 (electromagnetismo y óptica): bolillero, tribunal, tarjetas de repaso, deducciones y simuladores.">
-<meta name="theme-color" content="#080d0b">
+<meta name="theme-color" content="#eceef1">
+<link rel="preload" href="vendor/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="vendor/fonts/source-serif-4-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="vendor/katex/katex.min.css">
 <link rel="stylesheet" href="css/style.css">
-<script>try{var t=localStorage.getItem('f2d.theme');if(!t){t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('f2d.theme');if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t;document.querySelector('meta[name=theme-color]').content=t==='dark'?'#0d1017':'#eceef1'}catch(e){}</script>
 </head>
 <body>
-<header class="topbar">
-  <a class="brand" href="#/" aria-label="Inicio">
-    <svg viewBox="0 0 34 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 11 C5 1,9 1,13 11 S21 21,25 11 S31 3,33 8" style="stroke:var(--trace)"/><path d="M1 11H33" stroke-dasharray="1 3" opacity=".4"/></svg>
+<a class="skip" href="#app">Saltar al contenido</a>
+<header class="topbar" id="topbar">
+  <a class="brand" href="#/" aria-label="Física 2 · defensa oral — inicio">
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M8 16C8 7 24 7 24 16M8 16c0 9 16 9 16 0" stroke="currentColor" stroke-width="1.3" opacity=".45"/><path d="M8 16h16" stroke="currentColor" stroke-width="1.3" opacity=".45"/><circle cx="8" cy="16" r="5" fill="var(--pos)"/><circle cx="24" cy="16" r="5" fill="var(--neg)"/><path d="M6 16h4M8 14v4M22 16h4" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
     <b>Física 2</b><span>defensa oral</span>
   </a>
   <nav class="nav" id="nav" aria-label="Principal">
@@ -25,10 +28,14 @@
     <a href="#/lab" data-r="lab">Lab</a>
     <a href="#/entrenar" data-r="entrenar">Entrenar</a>
     <a href="#/progreso" data-r="progreso">Progreso</a>
+    <span class="nav-ind" id="navInd" aria-hidden="true"></span>
   </nav>
-  <button class="iconbtn" id="themeBtn" title="Cambiar tema (oscuro / papel)" aria-label="Cambiar tema">◐</button>
+  <button class="iconbtn" id="themeBtn" title="Cambiar a tema oscuro / claro" aria-label="Cambiar tema">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+  </button>
 </header>
-<main id="app"><noscript>Esta plataforma necesita JavaScript.</noscript></main>
+<main id="app" tabindex="-1"><noscript>Esta plataforma necesita JavaScript.</noscript></main>
 
 <script src="vendor/katex/katex.min.js"></script>
 <script src="vendor/katex/auto-render.min.js"></script>

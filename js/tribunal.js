@@ -172,7 +172,7 @@
       clearInterval(tmr); stopRec(); $('#done', app).disabled = true; metrics();
       const rv = $('#review', app);
       rv.innerHTML = `<div class="sectionhead" style="margin-top:22px"><h3 style="margin:0">Lo que el tribunal esperaba</h3></div>
-        <p class="small mute">${st.hint || 'Tildá lo que dijiste con claridad y sin mirar.'} Sé honesto: te sirve más.</p>
+        <p class="small mute">${st.hint ? 'Tildá los temas que cubriste.' : 'Tildá lo que dijiste con claridad y sin mirar.'} Sé honesto: te sirve más.</p>
         ${st.k.map((k, i) => `<label class="check" style="text-transform:none;letter-spacing:0;font:inherit;color:inherit"><input type="checkbox" data-i="${i}"><span>${k}</span></label>`).join('')}
         ${st.err ? `<div class="callout"><b>Error típico</b><br>${st.err}</div>` : ''}
         <div class="row" style="margin-top:14px"><span class="mono" id="live">0 / ${st.k.length}</span><span class="sp"></span><button class="btn solid" id="next">${S.i + 1 >= S.steps.length ? 'Ver resultado' : 'Siguiente pregunta →'}</button></div>`;

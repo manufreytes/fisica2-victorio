@@ -24,7 +24,8 @@ function toast(msg, ms = 2200) {
   const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t);
   setTimeout(() => t.remove(), ms);
 }
-const BLOCK = { 'Electrostática': 'var(--trace3)', 'Electrodinámica': 'var(--trace2)', 'Magnetismo': 'var(--trace)', 'Ondas y CA': 'var(--trace4)', 'Óptica': 'var(--trace5)' };
+const BLOCK = { 'Electrostática': 'var(--b-es)', 'Electrodinámica': 'var(--b-ed)', 'Magnetismo': 'var(--b-mg)', 'Ondas y CA': 'var(--b-ca)', 'Óptica': 'var(--b-op)' };
+const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const unitColor = u => BLOCK[(typeof u === 'object' ? u : U(u)).block];
 const TYPES = { def: 'Definición', ded: 'Deducción', apl: 'Aplicación', cruz: 'Pregunta cruzada', pte: 'Pregunta puente', exp: 'Exposición libre' };
 const pillHTML = t => `<span class="pill ${t}">${TYPES[t]}</span>`;
@@ -38,24 +39,56 @@ const Router = (() => {
     routes.push({ re, keys, name, fn });
   }
   function onLeave(fn) { cleanups.push(fn); }
-  function render() {
+  /* Indicador deslizante del menú */
+  function moveInd(instant) {
+    const ind = $('#navInd'), a = $('#nav a.on'); if (!ind) return;
+    if (!a) { ind.classList.remove('ready'); return; }
+    if (instant) ind.style.transition = 'none';
+    ind.style.width = a.offsetWidth + 'px'; ind.style.transform = `translateX(${a.offsetLeft}px)`;
+    if (instant) { void ind.offsetWidth; ind.style.transition = ''; }
+    ind.classList.add('ready');
+  }
+  window.addEventListener('resize', () => moveInd(true));
+  if (document.fonts) document.fonts.ready.then(() => moveInd(true));
+
+  /* Entrada escalonada del contenido de cada vista */
+  function stagger(app) {
+    const els = [];
+    Array.from(app.children).forEach(el => {
+      if (el.matches('.hero,.fade,.rv')) return;
+      if (el.matches('.grid')) Array.from(el.children).forEach(c => { if (!c.matches('.fade')) els.push(c); });
+      else els.push(el);
+    });
+    els.slice(0, 22).forEach((el, i) => { el.style.setProperty('--i', i); el.classList.add('rv'); });
+  }
+
+  function paint(path, qs) {
     cleanups.splice(0).forEach(f => { try { f(); } catch (e) {} });
-    const raw = location.hash.replace(/^#/, '') || '/';
-    const [path, qs] = raw.split('?'); state.query = Object.fromEntries(new URLSearchParams(qs || ''));
+    state.query = Object.fromEntries(new URLSearchParams(qs || ''));
     const app = $('#app');
     for (const r of routes) {
       const m = r.re.exec(path); if (!m) continue;
       const params = {}; r.keys.forEach((k, i) => params[k] = decodeURIComponent(m[i + 1]));
-      $$('#nav a').forEach(a => a.classList.toggle('on', a.dataset.r === r.name));
+      $$('#nav a').forEach(a => { const on = a.dataset.r === r.name; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+      moveInd(lastPath === null);
       app.innerHTML = '';
-      try { r.fn(params, app); } catch (e) { console.error(e); app.innerHTML = '<div class="card">Ocurrió un error al cargar esta vista. Probá recargar la página.</div>'; }
+      try { r.fn(params, app); } catch (e) { console.error(e); app.innerHTML = '<div class="card">No se pudo cargar esta vista. Recargá la página para intentarlo de nuevo.</div>'; }
       math(app);
-      if (path !== lastPath) window.scrollTo(0, 0);
+      const changed = path !== lastPath;
+      if (changed) stagger(app);
+      if (changed && lastPath !== null) { window.scrollTo(0, 0); if (!app.contains(document.activeElement)) app.focus({ preventScroll: true }); }
       lastPath = path; return;
     }
-    location.hash = '#/';
   }
-  window.addEventListener('hashchange', render);
+  function render(opts = {}) {
+    const raw = location.hash.replace(/^#/, '') || '/';
+    const [path, qs] = raw.split('?');
+    if (!routes.some(r => r.re.test(path))) { location.hash = '#/'; return; }
+    const animate = !opts.instant && lastPath !== null && path !== lastPath && document.startViewTransition && !reducedMotion();
+    if (animate) document.startViewTransition(() => paint(path, qs));
+    else paint(path, qs);
+  }
+  window.addEventListener('hashchange', () => render());
   return { add, render, onLeave, state };
 })();
 const route = Router.add, onLeave = Router.onLeave;

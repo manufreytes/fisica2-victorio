@@ -330,7 +330,7 @@
 
   /* ---------- registro ---------- */
   const G = {
-    field: '<svg viewBox="0 0 160 78"><circle cx="50" cy="39" r="7" fill="var(--trace2)"/><circle cx="110" cy="39" r="7" fill="var(--trace3)"/><g fill="none" stroke="var(--trace)" stroke-width="1.3"><path d="M57 36C75 18 90 18 103 36"/><path d="M57 42C75 60 90 60 103 42"/><path d="M57 39H103"/><path d="M45 32C35 10 10 20 6 30"/><path d="M115 32C130 10 150 20 154 30"/></g></svg>',
+    field: '<svg viewBox="0 0 160 78"><circle cx="50" cy="39" r="7" fill="var(--pos)"/><circle cx="110" cy="39" r="7" fill="var(--neg)"/><g fill="none" stroke="var(--trace)" stroke-width="1.3"><path d="M57 36C75 18 90 18 103 36"/><path d="M57 42C75 60 90 60 103 42"/><path d="M57 39H103"/><path d="M45 32C35 10 10 20 6 30"/><path d="M115 32C130 10 150 20 154 30"/></g></svg>',
     lorentz: '<svg viewBox="0 0 160 78"><g fill="none" stroke="var(--trace3)" opacity=".5"><circle cx="30" cy="20" r="5"/><circle cx="80" cy="20" r="5"/><circle cx="130" cy="20" r="5"/><circle cx="30" cy="60" r="5"/><circle cx="80" cy="60" r="5"/><circle cx="130" cy="60" r="5"/></g><path d="M8 62C20 62 40 56 50 36S85 6 108 22 126 56 100 50" fill="none" stroke="var(--trace)" stroke-width="2"/></svg>',
     trans: '<svg viewBox="0 0 160 78"><path d="M10 68C40 68 60 20 150 14" fill="none" stroke="var(--trace)" stroke-width="2"/><path d="M10 14C40 14 60 62 150 68" fill="none" stroke="var(--trace2)" stroke-width="2"/><path d="M10 74H150M10 6V74" stroke="var(--line)"/></svg>',
     alt: '<svg viewBox="0 0 160 78"><path d="M8 39C25 -5 45 -5 62 39S98 83 115 39 140 -5 152 20" fill="none" stroke="var(--trace)" stroke-width="2"/><path d="M8 20C25 60 45 60 62 20S98 -20 115 20" fill="none" stroke="var(--trace2)" stroke-width="2" opacity=".8"/></svg>',
